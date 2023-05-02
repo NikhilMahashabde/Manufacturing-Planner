@@ -9,7 +9,7 @@ def index():
     # connection = psycopg2.connect(host=os.getenv("PGHOST"), user=os.getenv("PGUSER"), password=os.getenv("PGPASSWORD"), port=os.getenv("PGPORT"), dbname=os.getenv("PGDATABASE"))
     connection = psycopg2.connect(os.getenv("DATABASE_URL"))
     cursor = connection.cursor()
-    cursor.execute("SELECT * FROM mytable;")
+    cursor.execute("SELECT * FROM userauth;")
     results = cursor.fetchall()
     connection.close()
     return f"{results[0]}"
