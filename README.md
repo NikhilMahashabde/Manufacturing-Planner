@@ -20,3 +20,9 @@ Follow the guide at https://render.com/docs/deploy-flask.
 - js to call json data with jwt header
 
 - site will check jwt token against main site to authenticate token 
+
+
+**routes**
+
+/workorders/api
+/workorders/api/<id>
