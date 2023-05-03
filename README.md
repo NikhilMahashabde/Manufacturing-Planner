@@ -7,3 +7,16 @@ The app in this repo is deployed at [https://flask.onrender.com](https://flask.o
 ## Deployment
 
 Follow the guide at https://render.com/docs/deploy-flask.
+
+
+# Project 2 manufac alpha static site
+
+
+
+- login with session token
+- if logged in, send back jwt
+- send back site to private home page route
+- site includes js 
+- js to call json data with jwt header
+
+- site will check jwt token against main site to authenticate token 
