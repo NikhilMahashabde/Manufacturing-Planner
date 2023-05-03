@@ -40,7 +40,8 @@ class DatabaseAcessInterface(ABC):
 class PGDBAcessService(DatabaseAcessInterface):
 
     def dbConnect(self):
-        self.connection = psycopg2.connect(os.getenv("DATABASE_URL"))
+        #self.connection = psycopg2.connect(os.getenv("DATABASE_URL"))
+        self.connection = psycopg2.connect(host="dpg-ch8fgtg2qv2864ssurfg-a.oregon-postgres.render.com", user="project2_o8rr_user", password="3z3kTM6n1up51mttWkpPys1JpR3hq5ug", port="5432", dbname="project2_o8rr")
         self.cursor = self.connection.cursor()
 
     def dbClose(self):
@@ -86,5 +87,4 @@ class PGDBAcessService(DatabaseAcessInterface):
         
 __all__ = ['DatabaseAcessInterface','PGDBAcessService']
 
-# db = PGDBAcessService()
 # db.dbGeneric('update userdata set email = %s where email = %s' , ('nik.m1992@gmail.com', 'nik.m1992@gmai.com' ))

@@ -1,0 +1,57 @@
+{% extends "index.html" %}
+
+{% block title %} Edit User Authorisation data {% endblock %}
+
+{% block main %}
+
+<form method="POST" action="/api/userAuth/update">
+
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="id">ID</th>
+            <th scope="uuid">UUID</th>
+            <th scope="name">Name</th>
+            <th scope="email">Email</th>
+            <th scope="isAdmin">Pass</th>
+            <th scope="password">Admin</th>
+          </tr>
+        </thead>
+        <tbody>
+
+            {% for item in allUserAuthData %}
+          <tr>
+            <th scope="row">    
+                <input type="number" id="{{item[0]}}.id" name="{{item[0]}}.id" value = "{{item[0]}}" required>            
+            </th>
+            <td>
+                <input type="text" id="{{item[0]}}.uuid" name="{{item[0]}}.uuid" value = "{{item[1]}}" required>     
+            </td>
+            <td>
+              <input type="text" id="{{item[0]}}.name" name="{{item[0]}}.name" value = "{{item[2]}}" required>  
+            </td>
+            <td>
+              <input type="text" id="{{item[0]}}.email" name="{{item[0]}}.email" value = "{{item[3]}}" required> 
+            </td>
+            <td>
+              <input type="password" id="{{item[0]}}.password" name="{{item[0]}}.password" value = "" > 
+            </td>
+            <td>
+              <input type="text" id="{{item[0]}}.isadmin" name="{{item[0]}}.isadmin" value = "{{item[4]}}" required> 
+            </td>
+            <td>
+
+            </td>
+          </tr>
+
+          {% endfor %}
+
+          <button type="submit">Submit</button>
+        </tbody>
+      </table>
+
+
+</form>
+
+
+{% endblock %}

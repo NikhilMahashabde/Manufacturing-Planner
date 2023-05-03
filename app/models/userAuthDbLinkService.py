@@ -14,11 +14,11 @@ class UserAuthDataStructure():
         self.password_hash:str = password_hash
 
     def printUserAuthDataStructure(self):
-        return (print(f'{self.name} - {self.uuid} - {self.email} -{self.isAdmin}'))
+        return (print(f'{self.id} - {self.uuid} - {self.name} - {self.email} - {self.isAdmin} - {self.password_hash}'))
 
 #when returning data from db 
 class UserAuthDBStructure(UserAuthDataStructure):
-    def __init__(self, id, uuid, name, email, isAdmin, password_hash ) -> None:
+    def __init__(self, id:int, uuid, name:str, email:str, isAdmin:bool, password_hash:str ) -> None:
         self.id = id
         super().__init__(name, email, uuid, isAdmin, password_hash)
         
@@ -41,6 +41,10 @@ class UserAuthDbLinkInterface(ABC):
 
     @abstractmethod
     def updateUserAuth():
+        None
+
+    @abstractmethod
+    def getAllUsers():
         None
         
 
@@ -75,31 +79,42 @@ class UserAuthDbLink(UserAuthDbLinkInterface):
         return True
 
     def getUserAuthByEmail(self, emailId):
-        searchQuery = f"SELECT * FROM userdata WHERE email = '{emailId}'"
+        searchQuery = f"SELECT * FROM userauth WHERE email = '{emailId}'"
         results:UserAuthDBStructure = UserAuthDBStructure(*self.dbAccessServiceInstance.dbReadRecord(searchQuery)[0])
         return results
     
-    def getUserAuthById(self, id):
-        searchQuery = f"SELECT * FROM userdata WHERE id = '{id}'"
+    def getUserAuthById(self, id:int):
+        searchQuery = f"SELECT * FROM userauth WHERE id = '{id}'"
         results:UserAuthDBStructure = UserAuthDBStructure(*self.dbAccessServiceInstance.dbReadRecord(searchQuery)[0])
         return results
     
     def updateUserAuth(self, data:UserAuthDBStructure):
+
         command = """
                         UPDATE userauth
                         SET 
                         name = %s,
+                        uuid = %s, 
                         email = %s,
                         isAdmin = %s,
-                        password_hash = %s  
+                        password_hash = %s
                         where id = %s       
                     """
-        args = (data.name, data.email, data.isAdmin, data.password_hash, data.id)
+        args = (data.name, data.uuid, data.email, data.isAdmin, data.password_hash, data.id)
         self.dbAccessServiceInstance.dbUpdateRecord(command, args)
+
+    
+    def getAllUsers(self):
+        searchQuery = f"SELECT * FROM userauth"
+        results = self.dbAccessServiceInstance.dbReadRecord(searchQuery)
+        return results
+
+
 
 
 #updatemain:UserAuthDBStructure = UserAuthDBStructure(1, '123', 'nikhil', 'nik.m1992@gmail.com', )., True)
 # bcrypt.hashpw('test'.encode(), bcrypt.gensalt().decode()
+
 
 __all__ = ['UserAuthDbLink','UserAuthDbLinkInterface', 'UserAuthDBStructure', 'UserAuthDataStructure']
 
