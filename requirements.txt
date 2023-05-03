@@ -2,5 +2,4 @@ Flask
 Gunicorn
 psycopg2
 datetime
-abc
 bcrypt
