@@ -4,59 +4,60 @@
 
 {% block main %}
 
-<!-- <form method="POST" action="/api/workorders"> -->
+<form method="POST" action="/api/workorders/create">
+  <button type="submit" value="add">Create New Order</button>
+</form>
 
-    <table class="table">
-        <thead>
-          <tr>
-            <th scope="workOrderNumber">Name</th>
-            <th scope="itemNumber">Item Number</th>
-            <th scope="Itemdescription">Item Description</th>
-            <th scope="quantity">Quantity</th>
-            <th scope="project">Project</th>
-            <th scope="duedate">Due Date</th>
-          </tr>
-        </thead>
-        <tbody>
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="workOrderNumber">Name</th>
+      <th scope="itemNumber">Item Number</th>
+      <th scope="Itemdescription">Item Description</th>
+      <th scope="quantity">Quantity</th>
+      <th scope="project">Project</th>
+      <th scope="duedate">Due Date</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for order in allWorkOrders %}
 
-          {% for order in allWorkOrders %}
-          <tr>
-            <th scope="row">   
-                <a href="/api/workorders/{{order[1]}}">{{order[1]}}</a>
-                
-            </th>
-            <td>
-              {{order[2]}}
-            </td>
-            <td>
-              {{order[3]}}
-         
-            </td>
-            <td>
-              {{order[4]}}
-           
-            </td>
-            <td>
-              {{order[5]}}
+    <tr>
+      <th scope="row">   
+          <a href="/api/workorders/{{order.wonumber}}">{{order.wonumber}}</a>
+          
+      </th>
 
-            </td>
-            <td>
-              {{order[6]}}
-   
-            </td>
-            <td>
+      <td>
+        {{order.itemnumber}}
+      </td>
 
-            </td>
-          </tr>
+      <td>
+        {{order.itemdescription}}
+    
+      </td>
+      <td>
+        {{order.quantity}}
+      
+      </td>
+      <td>
+        {{order.project}}
 
-          {% endfor %}
+      </td>
+      <td>
+        {{order.duedate}}
 
-          <button type="submit">Submit Updates</button>
-        </tbody>
-      </table>
+      </td>
+      <td>
+
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
 
 
-<!-- </form> -->
+
 
 
 {% endblock %}

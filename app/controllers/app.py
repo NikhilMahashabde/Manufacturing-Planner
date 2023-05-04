@@ -7,6 +7,7 @@ from datetime import timedelta
 import os
 from models.userAuthService import *
 from models.workOrderService import *
+import json
 
 
 
@@ -29,13 +30,17 @@ def launch():
 
 @app.context_processor
 def templateData():
+    items = g.workOrders.getAllWorkOrders()
+    allWorkOrders = [json.loads(order) for order in items]
+
     appData = dict(
 
     session = session.get("user_id", ""),
     userAuthId = UserAuthService().getUserAuthName(session),
     userAuthData = UserAuthService().getUserAuthData(session) if session.get("user_id", "") else "",
-    allWorkOrders = g.workOrders.getAllWorkOrders()
-    
+    allWorkOrders = allWorkOrders
+
+
     )
     return appData
 ######################################## public routes

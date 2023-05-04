@@ -1,6 +1,7 @@
 # file: workorderDBLinkService.py
 from abc import ABC, abstractmethod
 from models.dbAcessService import * 
+import json
 
 #when adding to DB
 class WorkOrderListDataStructure():
@@ -23,6 +24,8 @@ class WorkOrderListDataDBStructure(WorkOrderListDataStructure):
 
     def printStructure(self):
         print((item for item in self), " ")
+
+
 
         
 
@@ -50,7 +53,8 @@ class WorkOrdersDbLinkInterface(ABC):
 class WorkOrdersDbLink(WorkOrdersDbLinkInterface):
     def __init__(self) -> None:
         self.dbAccessServiceInstance: DatabaseAcessInterface = PGDBAcessService()
-        self.tableName = "workorders"
+        self.tableName = 'workorders'
+        
 
     def createWorkOrdersTable(self):
         command = f"""
@@ -83,7 +87,15 @@ class WorkOrdersDbLink(WorkOrdersDbLinkInterface):
     def getAllWorkOrders(self):
         command = f"""SELECT * FROM {self.tableName}"""
         workorderData = self.dbAccessServiceInstance.dbReadRecord(command)
-        return workorderData
+
+        wolist = []
+        for item in workorderData:
+            woDict = dict(zip(WorkOrderListDataDBStructure(None,None,None,None,None,None, None).__dict__.keys(), item))
+            wolist.append(json.dumps(woDict))
+
+        print(wolist)
+       
+        return wolist
 
     # def getUserAuthByEmail(self, emailId):
     #     searchQuery = f"SELECT * FROM userdata WHERE email = '{emailId}'"
