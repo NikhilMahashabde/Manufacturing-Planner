@@ -24,13 +24,8 @@ class WorkOrderListDataDBStructure(WorkOrderListDataStructure):
 
     def printStructure(self):
         print((item for item in self), " ")
-
-
-
-        
-
+      
 #usser database interface -> calls on db access instance. 
-
 class WorkOrdersDbLinkInterface(ABC):
 
     @abstractmethod

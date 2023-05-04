@@ -8,6 +8,9 @@ class WorkOrderServiceInterface(ABC):
         @abstractmethod
         def getAllWorkOrders(self):
             pass
+
+        def workOrderAdd(self, request):
+            pass
         
 
         # def menuAdd(self):
@@ -30,9 +33,22 @@ class WorkOrderService(WorkOrderServiceInterface):
     def getAllWorkOrders(self):
         return self.WorkOrderDBInstance.getAllWorkOrders()
     
-    # def menuAdd(self, request):
-    #     newItem:MenuItemStructure = MenuItemStructure( request.form['name'], request.form['URL'], request.form['price'])
-    #     self.fTdatabaseInstance.addNewFoodItem(newItem)
+    def workOrderAdd(self, request) -> bool:
+
+        items:int = len(request.form)/6
+        print (f"total item tally: {items}")
+        i:int=1
+        while i <= items:
+            newWorkOrder: WorkOrderListDataStructure = WorkOrderListDataStructure( 
+                 request.form[f'{i}.name'], 
+                 request.form[f'{i}.number'], 
+                 request.form[f'{i}.itemdescription'], 
+                 request.form[f'{i}.project'], 
+                 request.form[f'{i}.quantity'], 
+                 request.form[f'{i}.duedate'])
+            self.WorkOrderDBInstance.addWorkOrder(newWorkOrder)
+            i+=1
+        return True
 
     # def getMenuItem(self, menuId):
     #     searchById = 'id'

@@ -1,5 +1,4 @@
 # file: app.py
-
 import sys
 sys.path.insert(0, '..')
 from flask import Flask, render_template, session, redirect, url_for, request, g
@@ -9,8 +8,6 @@ from models.userAuthService import *
 from models.workOrderService import *
 import json
 
-
-
 app = Flask(__name__, template_folder='../templates')
 app.secret_key = 'laalaaland'
 app.config['SECRET_KEY'] = 'laalaaland'
@@ -19,14 +16,11 @@ app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(seconds=1800)
 publicRoutes = ['/login', '/about', '/contact', '/forms/user/add' , '/api/user/add']
 adminRoutes = ['/forms/userAuth/update', '/api/userAuth/update']
 
-
 @app.before_request
 def launch():
     if (request.path not in publicRoutes) and (not session.get("user_id", "")): return redirect(url_for("routeLogin"))
     g.userAuth:UserAuthInterface = UserAuthService()
     g.workOrders: WorkOrderServiceInterface = WorkOrderService()
-    None
-
 
 @app.context_processor
 def templateData():
@@ -34,13 +28,10 @@ def templateData():
     allWorkOrders = [json.loads(order) for order in items]
 
     appData = dict(
-
-    session = session.get("user_id", ""),
-    userAuthId = UserAuthService().getUserAuthName(session),
-    userAuthData = UserAuthService().getUserAuthData(session) if session.get("user_id", "") else "",
-    allWorkOrders = allWorkOrders
-
-
+        session = session.get("user_id", ""),
+        userAuthId = UserAuthService().getUserAuthName(session),
+        userAuthData = UserAuthService().getUserAuthData(session) if session.get("user_id", "") else "",
+        allWorkOrders = allWorkOrders
     )
     return appData
 ######################################## public routes
@@ -86,9 +77,16 @@ def routeLanding():
     # connection = psycopg2.connect(host=os.getenv("PGHOST"), user=os.getenv("PGUSER"), password=os.getenv("PGPASSWORD"), port=os.getenv("PGPORT"), dbname=os.getenv("PGDATABASE"))
     return render_template('workorders.html')
 
+@app.route("/forms/workorder/add")
+def routeWorkOrderAddForm():
+    return render_template('addWorkOrder.html')
+
+@app.route("/api/workorder/add", methods=['POST'])
+def routeWorkOrderAddApi():
+    g.workOrders.workOrderAdd(request)
+    return redirect(url_for('routeLanding'))
 
 ######################################### admin routes ################################################
-
 
 @app.route("/forms/userAuth/update")
 def routeUpdateUserAuthForm():
@@ -99,13 +97,11 @@ def routeUpdateUserAuthApi():
     g.userAuth.updateAllUserAuthData(request)
     return  redirect(url_for('routeUpdateUserAuthForm'))
 
-
 @app.route("/api/user/delete", methods=['POST'])
 def routeDeleteUserAuthApi():
     g.userAuth.deleteUserAuthData(request)
     return  redirect(url_for('routeUpdateUserAuthForm'))
     
-
 # @app.route('/')
 # def index():
 #     # connection = psycopg2.connect(host=os.getenv("PGHOST"), user=os.getenv("PGUSER"), password=os.getenv("PGPASSWORD"), port=os.getenv("PGPORT"), dbname=os.getenv("PGDATABASE"))

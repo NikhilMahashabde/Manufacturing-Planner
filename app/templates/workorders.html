@@ -1,12 +1,12 @@
 {% extends "index.html" %}
 
 {% block title %} Work Orders {% endblock %}
+{% block tabletitle %} Work Orders {% endblock %}
 
 {% block main %}
 
-<form method="POST" action="/api/workorders/create">
-  <button type="submit" value="add">Create New Order</button>
-</form>
+<button onclick="window.location.href='forms/workorder/add'">Create New Order</button>
+
 
 <table class="table">
   <thead>

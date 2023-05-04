@@ -1,0 +1,56 @@
+{% extends "index.html" %}
+
+
+{% block title %} New Work Order {% endblock %}
+{% block tabtitle %} New Work Order {% endblock %}
+
+
+{% block main %}
+
+<form method="POST" action="/api/workorder/add">
+
+
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="workOrderNumber">Name</th>
+            <th scope="itemNumber">Item Number</th>
+            <th scope="Itemdescription">Item Description</th>
+            <th scope="quantity">Quantity</th>
+            <th scope="project">Project</th>
+            <th scope="duedate">Due Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">   
+                <input type="number" id="WO.input.name" name="1.name" required>
+            </th>
+      
+            <td>
+                <input type="text" id="WO.input.number" name="1.number" required>
+            </td>
+      
+            <td>
+                <input type="text" id="WO.input.Itemdescription" name="1.itemdescription" required>
+          
+            </td>
+            <td>
+                <input type="number" id="WO.input.quantity" name="1.quantity" required>
+            
+            </td>
+            <td>
+                <input type="text" id="WO.input.project" name="1.project" required>
+      
+            </td>
+            <td>
+                <input type="text" id="WO.input.duedate" name="1.duedate" required>
+
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <button type="submit" required>Submit</button>
+</form>
+
+{% endblock %}
