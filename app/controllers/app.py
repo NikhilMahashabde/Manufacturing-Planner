@@ -6,7 +6,9 @@ from flask import Flask, render_template, session, redirect, url_for, request, g
 from datetime import timedelta
 import os
 from models.userAuthService import *
-from models.userAuthDbLinkService import * 
+from models.workOrderService import *
+
+
 
 app = Flask(__name__, template_folder='../templates')
 app.secret_key = 'laalaaland'
@@ -16,6 +18,15 @@ app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(seconds=1800)
 publicRoutes = ['/login', '/about', '/contact', '/forms/user/add' , '/api/user/add']
 adminRoutes = ['/forms/userAuth/update', '/api/userAuth/update']
 
+
+@app.before_request
+def launch():
+    if (request.path not in publicRoutes) and (not session.get("user_id", "")): return redirect(url_for("routeLogin"))
+    g.userAuth:UserAuthInterface = UserAuthService()
+    g.workOrders: WorkOrderServiceInterface = WorkOrderService()
+    None
+
+
 @app.context_processor
 def templateData():
     appData = dict(
@@ -23,16 +34,10 @@ def templateData():
     session = session.get("user_id", ""),
     userAuthId = UserAuthService().getUserAuthName(session),
     userAuthData = UserAuthService().getUserAuthData(session) if session.get("user_id", "") else "",
+    allWorkOrders = g.workOrders.getAllWorkOrders()
     
     )
     return appData
-
-@app.before_request
-def launch():
-    if (request.path not in publicRoutes) and (not session.get("user_id", "")): return redirect(url_for("routeLogin"))
-    g.userAuth:UserAuthInterface = UserAuthService()
-    None
-
 ######################################## public routes
 
 @app.route("/login")
@@ -74,7 +79,7 @@ def routeApiAddUserAuth():
 def routeLanding():
     # return (render_template(url_for('routeLogin')) if not session.get("user_id", "") else redirect(url_for('routeMenu')))
     # connection = psycopg2.connect(host=os.getenv("PGHOST"), user=os.getenv("PGUSER"), password=os.getenv("PGPASSWORD"), port=os.getenv("PGPORT"), dbname=os.getenv("PGDATABASE"))
-    return render_template('index.html')
+    return render_template('workorders.html')
 
 
 ######################################### admin routes ################################################

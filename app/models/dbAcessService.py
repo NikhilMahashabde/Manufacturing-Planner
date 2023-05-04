@@ -15,19 +15,19 @@ class DatabaseAcessInterface(ABC):
 
     #CRUD operations for records
     @abstractmethod
-    def dbCreateRecord():
+    def dbCreateRecord(command, args):
         pass
 
     @abstractmethod
-    def dbReadRecord():
+    def dbReadRecord(searchQuery):
         pass
 
     @abstractmethod
-    def dbUpdateRecord():
+    def dbUpdateRecord(command, args):
         pass
 
     @abstractmethod
-    def dbDeleteRecord():
+    def dbDeleteRecord(command, args):
         pass
 
     @abstractmethod

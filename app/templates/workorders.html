@@ -1,0 +1,62 @@
+{% extends "index.html" %}
+
+{% block title %} Work Orders {% endblock %}
+
+{% block main %}
+
+<!-- <form method="POST" action="/api/workorders"> -->
+
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="workOrderNumber">Name</th>
+            <th scope="itemNumber">Item Number</th>
+            <th scope="Itemdescription">Item Description</th>
+            <th scope="quantity">Quantity</th>
+            <th scope="project">Project</th>
+            <th scope="duedate">Due Date</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          {% for order in allWorkOrders %}
+          <tr>
+            <th scope="row">   
+                <a href="/api/workorders/{{order[1]}}">{{order[1]}}</a>
+                
+            </th>
+            <td>
+              {{order[2]}}
+            </td>
+            <td>
+              {{order[3]}}
+         
+            </td>
+            <td>
+              {{order[4]}}
+           
+            </td>
+            <td>
+              {{order[5]}}
+
+            </td>
+            <td>
+              {{order[6]}}
+   
+            </td>
+            <td>
+
+            </td>
+          </tr>
+
+          {% endfor %}
+
+          <button type="submit">Submit Updates</button>
+        </tbody>
+      </table>
+
+
+<!-- </form> -->
+
+
+{% endblock %}
