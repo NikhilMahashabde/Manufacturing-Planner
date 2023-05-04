@@ -13,7 +13,7 @@
             <th scope="uuid">UUID</th>
             <th scope="name">Name</th>
             <th scope="email">Email</th>
-            <th scope="isAdmin">Pass</th>
+            <th scope="password">New Password</th>
             <th scope="password">Admin</th>
           </tr>
         </thead>
@@ -22,7 +22,7 @@
             {% for item in allUserAuthData %}
           <tr>
             <th scope="row">    
-                <input type="number" id="{{item[0]}}.id" name="{{item[0]}}.id" value = "{{item[0]}}" required>            
+                <input type="text" id="{{item[0]}}.id" name="{{item[0]}}.id" value = "{{item[0]}}"  readonly required>
             </th>
             <td>
                 <input type="text" id="{{item[0]}}.uuid" name="{{item[0]}}.uuid" value = "{{item[1]}}" required>     
@@ -46,11 +46,96 @@
 
           {% endfor %}
 
-          <button type="submit">Submit</button>
+          <button type="submit">Submit Updates</button>
         </tbody>
       </table>
 
 
+</form>
+
+<h1> Add user</h1>
+
+<form method="POST" action="/api/user/add">
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="name">Name</th>
+        <th scope="email">Email</th>
+        <th scope="isAdmin">Password</th>
+        <th scope="password">Password Verify</th>
+        <th scope="password">Admin</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <tr>
+        <th scope="row">    
+            <input type="text" id="input.user.name" name="name" required>       
+        </th>
+        <td>
+            <input type="text" id="input.user.email" name="email" required>    
+        </td>
+        <td>
+          <input type="text" id="input.user.password" name="password" required> 
+        </td>
+        <td>
+          <input type="text" id="input.user.password-verify" name="password-verify" required> 
+        </td>
+        <td>
+          <input type="checkbox" name="input.user.isAdmin" value="True">
+        </td>
+      </tr>
+
+
+      <button type="submit">Add user</button>
+    </tbody>
+  </table>
+</form>
+
+
+<h1> Delete User </h1>
+
+<form method="POST" action="/api/user/delete">
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="id">ID</th>
+        <th scope="uuid">UUID</th>
+        <th scope="name">Name</th>
+        <th scope="email">Email</th>
+        <th scope="password">Admin</th>
+        <th scope="delete">Select</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      {% for item in allUserAuthData %}
+        <tr>
+          <th scope="row">    
+              {{item[0]}}       
+          </th>
+          <td>
+              {{item[1]}}   
+          </td>
+          <td>
+              {{item[2]}} 
+          </td>
+          <td>
+              {{item[3]}}
+          </td>
+          <td>
+              {{item[4]}}
+          </td>
+          <td>
+              <input type="checkbox" name="input.{{item[0]}}.delete" value="True">
+
+          </td>
+        </tr>
+      {% endfor %}
+      <button type="submit">Delete Selection</button>
+    </tbody>
+  </table>
 </form>
 
 

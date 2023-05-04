@@ -13,7 +13,7 @@
     </div>
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="/">Foot truck</a>
+        <a class="navbar-brand" href="/">Home</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -28,6 +28,11 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/login">Log in</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/forms/user/add">Register</a>
+                </li>
+
+                
             {% endif %}
 
             <li class="nav-item active">
@@ -41,8 +46,9 @@
             </li>
 
 
+
             {% if userAuthData.isAdmin %}
-            <li class="nav-item">
+            <!-- <li class="nav-item">
                 <a class="nav-link" href="/forms/food/add">Add Item</a>
             </li>
 
@@ -52,11 +58,17 @@
 
             <li class="nav-item">
                 <a class="nav-link" href="/forms/food/delete">Delete Item</a>
+            </li> -->
+
+            <li class="nav-item">
+                <a class="nav-link" href="/forms/user/add">Add User</a>
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="/forms/user/add">Add Item</a>
+                <a class="nav-link" href="/forms/userAuth/update">Update users</a>
             </li>
+
+
             {% endif %}
 
           </ul>

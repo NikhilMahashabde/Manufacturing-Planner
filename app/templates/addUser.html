@@ -1,0 +1,25 @@
+{% extends "index.html" %}
+
+
+{% block title %} Register {% endblock %}
+
+{% block main %}
+
+<form method="POST" action="/api/user/add">
+    <label for="name">Name: </label>
+    <input type="text" id="input.user.name" name="name" required>
+
+    <label for="email">Email: </label>
+    <input type="text" id="input.user.email" name="email" required>
+
+    <label for="password">Password: </label>
+    <input type="text" id="input.user.password" name="password" required>
+
+    <label for="password">Verify Password: </label>
+    <input type="text" id="input.user.password-verify" name="password-verify" required>
+
+    <button type="submit">Submit</button>
+
+</form>
+
+{% endblock %}

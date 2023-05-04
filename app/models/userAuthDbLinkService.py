@@ -6,7 +6,7 @@ import bcrypt
 
 #when adding to DB
 class UserAuthDataStructure():
-    def __init__(self, name, email, uuid, isAdmin , password_hash) -> None:
+    def __init__(self, name:str, email:str, uuid:str, isAdmin:bool , password_hash:str) -> None:
         self.uuid = uuid
         self.name = name
         self.email = email
@@ -14,7 +14,7 @@ class UserAuthDataStructure():
         self.password_hash:str = password_hash
 
     def printUserAuthDataStructure(self):
-        return (print(f'{self.id} - {self.uuid} - {self.name} - {self.email} - {self.isAdmin} - {self.password_hash}'))
+        return (print(f'{self.uuid} - {self.name} - {self.email} - {self.isAdmin} - {self.password_hash}'))
 
 #when returning data from db 
 class UserAuthDBStructure(UserAuthDataStructure):
@@ -46,6 +46,10 @@ class UserAuthDbLinkInterface(ABC):
     @abstractmethod
     def getAllUsers():
         None
+
+    @abstractmethod
+    def deleteUserAuthRecord():
+        None
         
 
 class UserAuthDbLink(UserAuthDbLinkInterface):
@@ -60,8 +64,8 @@ class UserAuthDbLink(UserAuthDbLinkInterface):
                     values
                     (%s, %s, %s, %s, %s)
                     """
-        args = (data.uuid, data.name, data.email, data.isAdmin)
-        self.dbAcessInstance.dbAdd(command, args)
+        args = (data.uuid, data.name, data.email, data.isAdmin, data.password_hash)
+        self.dbAcessInstance.dbCreateRecord(command, args)
         return True
     
     def createUserAuthTable(self, tableName:str):
@@ -108,8 +112,11 @@ class UserAuthDbLink(UserAuthDbLinkInterface):
         searchQuery = f"SELECT * FROM userauth"
         results = self.dbAccessServiceInstance.dbReadRecord(searchQuery)
         return results
-
-
+    
+    def deleteUserAuthRecord(self, id):
+        searchQuery = f"DELETE FROM userauth WHERE id = %s"
+        args = id
+        self.dbAccessServiceInstance.dbDeleteRecord(searchQuery, args)
 
 
 #updatemain:UserAuthDBStructure = UserAuthDBStructure(1, '123', 'nikhil', 'nik.m1992@gmail.com', )., True)

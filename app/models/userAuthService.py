@@ -29,6 +29,9 @@ class UserAuthInterface(ABC):
     def updateAllUserAuthData():
         pass
 
+    @abstractmethod
+    def deleteUserAuthData(request):
+        pass
 
 class UserAuthService(UserAuthInterface):
 
@@ -58,9 +61,16 @@ class UserAuthService(UserAuthInterface):
         return userAuthData.name
     
     def addUserAuth(self, request):
-        newUser:UserAuthDataStructure = UserAuthDataStructure(request.form['name'], request.form['email'], request.form['password'], bool(request.form['isAdmin'])  )
-       # newUser.printUserAuthDataStructure()
 
+        if 'input.user.isAdmin' in request.form:
+            isAdmin:bool = request.form['input.user.isAdmin']
+        else:
+            isAdmin:bool = False
+
+        newUser:UserAuthDataStructure = UserAuthDataStructure(request.form['name'], request.form['email'], 'test', isAdmin, 
+            bcrypt.hashpw(request.form.get('password').encode(), bcrypt.gensalt()).decode())
+        newUser.printUserAuthDataStructure()
+        return self.userDBLinkService.addUserAuth(newUser)
 
     def getAllUserAuthData(self):
         allUserData = self.userDBLinkService.getAllUsers()
@@ -68,22 +78,39 @@ class UserAuthService(UserAuthInterface):
     
 
     def updateAllUserAuthData(self, request):
-        i = 1
-        while f'{i}.id' in request.form:
-
-            currentData:UserAuthDBStructure = self.userDBLinkService.getUserAuthById(i)
-            if request.form.get(f'{i}.password') is not "":
-                passwordUpdate = bcrypt.hashpw(request.form.get(f'{i}.password').encode(), bcrypt.gensalt()).decode()
-            else:
-                passwordUpdate = currentData.password_hash
-
-            item:UserAuthDBStructure = UserAuthDBStructure(request.form.get(f'{i}.id'),
-                                                            request.form.get(f'{i}.uuid'),
-                                                            request.form.get(f'{i}.name'),
-                                                            request.form.get(f'{i}.email'),
-                                                            request.form.get(f'{i}.isadmin'),
-                                                            passwordUpdate)
-            self.userDBLinkService.updateUserAuth(item)
+        
+        formIdCount:int = len(request.form)/6
+        formData = list(request.form.items())
+        print(request.form)
+        i:int = 0
+        entryCount:int = 0
+        while entryCount < formIdCount:
             i+=1
+            if f'{i}.id' in formData[entryCount*6]:
+
+                currentData:UserAuthDBStructure = self.userDBLinkService.getUserAuthById(i)
+                if request.form.get(f'{i}.password') != "":
+                    passwordUpdate = bcrypt.hashpw(request.form.get(f'{i}.password').encode(), bcrypt.gensalt()).decode()
+                else:
+                    passwordUpdate = currentData.password_hash
+
+                item:UserAuthDBStructure = UserAuthDBStructure(request.form.get(f'{i}.id'),
+                                                                request.form.get(f'{i}.uuid'),
+                                                                request.form.get(f'{i}.name'),
+                                                                request.form.get(f'{i}.email'),
+                                                                request.form.get(f'{i}.isadmin'),
+                                                                passwordUpdate)
+                self.userDBLinkService.updateUserAuth(item)
+                entryCount += 1
+                
+
+
+    def deleteUserAuthData(self, request):
+
+        for item in request.form:
+            id = item.split('.')[1]
+            self.userDBLinkService.deleteUserAuthRecord(id)
+
+        pass
 
 __all__ = ['UserAuthService','UserAuthInterface']

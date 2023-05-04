@@ -13,8 +13,8 @@ app.secret_key = 'laalaaland'
 app.config['SECRET_KEY'] = 'laalaaland'
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(seconds=1800)
 
-publicRoutes = ['/login', '/about', '/contact']
-adminRoutes = ['/forms/user/add', '/api/user/add']
+publicRoutes = ['/login', '/about', '/contact', '/forms/user/add' , '/api/user/add']
+adminRoutes = ['/forms/userAuth/update', '/api/userAuth/update']
 
 @app.context_processor
 def templateData():
@@ -56,6 +56,18 @@ def routeLogout():
     session.pop('user_id', None)
     return redirect(url_for("routeLogin"))
 
+@app.route("/forms/user/add")
+def routeAddUserAuthForm():
+    return render_template('AddUser.html')
+
+@app.route("/api/user/add", methods=['POST'])
+def routeApiAddUserAuth():
+    if not (request.form['password'] == request.form['password-verify']): return redirect (url_for('routeAddUserAuthForm'))
+    if (g.userAuth.addUserAuth(request)):
+        return redirect(url_for('routeLogin')) 
+    else:
+        return redirect(url_for('routeAddUserAuthForm'))
+    
 ######################################### private routes
 
 @app.route("/")
@@ -65,17 +77,7 @@ def routeLanding():
     return render_template('index.html')
 
 
-######################################### admin routes
-
-@app.route("/forms/user/add")
-def routeAddUserAuthForm():
-    return render_template('AddUser.html')
-
-@app.route("/api/user/add", methods=['POST'])
-def routeApiAddUserAuth():
-    g.userAuth.addUserAuth(request)
-    return redirect(url_for('routeAddUserAuthForm'))
-
+######################################### admin routes ################################################
 
 
 @app.route("/forms/userAuth/update")
@@ -88,6 +90,11 @@ def routeUpdateUserAuthApi():
     return  redirect(url_for('routeUpdateUserAuthForm'))
 
 
+@app.route("/api/user/delete", methods=['POST'])
+def routeDeleteUserAuthApi():
+    g.userAuth.deleteUserAuthData(request)
+    return  redirect(url_for('routeUpdateUserAuthForm'))
+    
 
 # @app.route('/')
 # def index():
