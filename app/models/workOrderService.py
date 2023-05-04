@@ -22,8 +22,8 @@ class WorkOrderServiceInterface(ABC):
         # def menuItemEdit(self):
         #     pass
 
-        # def menuItemDelete(self):
-        #     pass
+        def workOrderDelete(self, session):
+             pass
         
 class WorkOrderService(WorkOrderServiceInterface):
     
@@ -60,12 +60,15 @@ class WorkOrderService(WorkOrderServiceInterface):
     #     self.newItemId = request.form['id']
     #     self.fTdatabaseInstance.updateFoodRecord(self.newItemId, self.newItemEdit)
 
-    # def menuItemDelete(self, request):
-    #     self.newItemId = request.form['id']
-    #     if 'submitYes' in request.form:
-    #         self.fTdatabaseInstance.deleteFoodRecord(self.newItemId)
-    #         return True
-    #     elif 'submitNo' in request.form:
-    #         return False
+    def workOrderDelete(self, request):
+        itemCount = len(request.form)
+        print(itemCount)
+        print(request.form)
+        return
+        # if 'submitYes' in request.form:
+        #     self.fTdatabaseInstance.deleteFoodRecord(self.newItemId)
+        #     return True
+        # elif 'submitNo' in request.form:
+        #     return False
 
 __all__ = ['WorkOrderService', 'WorkOrderServiceInterface']

@@ -86,6 +86,14 @@ def routeWorkOrderAddApi():
     g.workOrders.workOrderAdd(request)
     return redirect(url_for('routeLanding'))
 
+@app.route("/api/workorder/process", methods=['POST', 'GET'])
+def routeWorkOrderDeleteApi():
+    print(request.form)
+
+    # g.workOrders.workOrderDelete(request)
+    return redirect(url_for('routeLanding'))
+
+
 ######################################### admin routes ################################################
 
 @app.route("/forms/userAuth/update")

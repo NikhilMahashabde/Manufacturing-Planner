@@ -33,8 +33,7 @@ class DatabaseAcessInterface(ABC):
     @abstractmethod
     def dbGeneric():
         pass
-    
- 
+
 ############# Specific implementation for PSQL database - implements standardised methods from interface
 
 class PGDBAcessService(DatabaseAcessInterface):

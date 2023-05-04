@@ -5,57 +5,67 @@
 
 {% block main %}
 
-<button onclick="window.location.href='forms/workorder/add'">Create New Order</button>
+<button onclick="window.location.href='/forms/workorder/add'">Create New Order</button>
 
+<form method="POST" action="/api/workorder/process">
 
-<table class="table">
-  <thead>
-    <tr>
-      <th scope="workOrderNumber">Name</th>
-      <th scope="itemNumber">Item Number</th>
-      <th scope="Itemdescription">Item Description</th>
-      <th scope="quantity">Quantity</th>
-      <th scope="project">Project</th>
-      <th scope="duedate">Due Date</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for order in allWorkOrders %}
+  <button type="submit" name="wo" value="delete">Delete Selected</button>
+  <button type="submit" name="wo" value="update">Update Work Orders</button>
 
-    <tr>
-      <th scope="row">   
-          <a href="/api/workorders/{{order.wonumber}}">{{order.wonumber}}</a>
-          
-      </th>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="select">Select</th>
+        <th scope="workOrderNumber">Name</th>
+        <th scope="itemNumber">Item Number</th>
+        <th scope="Itemdescription">Item Description</th>
+        <th scope="quantity">Quantity</th>
+        <th scope="project">Project</th>
+        <th scope="duedate">Due Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for order in allWorkOrders %}
 
-      <td>
-        {{order.itemnumber}}
-      </td>
+      <tr>
 
-      <td>
-        {{order.itemdescription}}
-    
-      </td>
-      <td>
-        {{order.quantity}}
+        <td>
+          <input type="checkbox" name="{{order.wonumber}}.selected">
+        </td>
+
+        <td scope="row">   
+            <a href="/api/workorders/{{order.wonumber}}">{{order.wonumber}}</a>
+        </td>
+
+        <td>
+          {{order.itemnumber}}
+        </td>
+
+        <td>
+          {{order.itemdescription}}
       
-      </td>
-      <td>
-        {{order.project}}
+        </td>
+        <td>
+          {{order.quantity}}
+        
+        </td>
+        <td>
+          {{order.project}}
 
-      </td>
-      <td>
-        {{order.duedate}}
+        </td>
+        <td>
+          {{order.duedate}}
 
-      </td>
-      <td>
+        </td>
+        <td>
 
-      </td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
 
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</form>
 
 
 
