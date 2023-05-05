@@ -100,7 +100,7 @@ class UserAuthDbLink(UserAuthDbLinkInterface):
         results:UserAuthDBStructure = UserAuthDBStructure(*self.dbAccessServiceInstance.dbReadRecord(searchQuery)[0])
         return results
     
-    def updateUserAuth(self, data: list[UserAuthDBStructure]):
+    def updateUserAuth(self, data):
 
         commandList = []
         argsList = []
