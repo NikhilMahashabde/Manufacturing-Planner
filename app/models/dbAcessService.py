@@ -66,9 +66,12 @@ class PGDBAcessService(DatabaseAcessInterface):
         self.dbClose()
         return self.results
 
-    def dbUpdateRecord(self, command, args):
+    def dbUpdateRecord(self, commands, args):
         self.dbConnect()
-        self.cursor.execute(command, (args))
+
+        for command, arg in zip(commands, args):
+            self.cursor.execute(command, (arg))
+
         self.connection.commit()
         self.dbClose()
 
@@ -83,6 +86,8 @@ class PGDBAcessService(DatabaseAcessInterface):
         self.cursor.execute(command, (args))
         self.connection.commit()
         self.dbClose()
+
+
         
 __all__ = ['DatabaseAcessInterface','PGDBAcessService']
 

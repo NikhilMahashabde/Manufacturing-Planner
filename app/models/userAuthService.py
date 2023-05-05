@@ -78,13 +78,11 @@ class UserAuthService(UserAuthInterface):
 
     def updateAllUserAuthData(self, request):
         
-        formIdCount:int = len(request.form)
+
         formData = list(request.form.items())
         print(request.form)
         print(formData)
-        print(formIdCount)
-        i:int = 0
-        entryCount:int = 0
+        datalist: list[UserAuthDBStructure] = []
         for key,value in formData:
             if key.endswith('.id'):
                 i = key.split('.')[0]
@@ -99,8 +97,10 @@ class UserAuthService(UserAuthInterface):
                                                                 request.form.get(f'{i}.email'),
                                                                 request.form.get(f'{i}.isadmin') or False,
                                                                 passwordUpdate)
-                self.userDBLinkService.updateUserAuth(item)
-                entryCount += 1
+                
+                datalist.append(item)
+                
+        self.userDBLinkService.updateUserAuth(datalist)
         print("failed")
         return True
                 

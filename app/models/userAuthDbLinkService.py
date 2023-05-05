@@ -30,7 +30,6 @@ class UserAuthDBStructure(UserAuthDataStructure):
             return True
         return False
 
-
 #usser database interface -> calls on db access instance. 
 
 class UserAuthDbLinkInterface(ABC):
@@ -101,32 +100,40 @@ class UserAuthDbLink(UserAuthDbLinkInterface):
         results:UserAuthDBStructure = UserAuthDBStructure(*self.dbAccessServiceInstance.dbReadRecord(searchQuery)[0])
         return results
     
-    def updateUserAuth(self, data:UserAuthDBStructure):
+    def updateUserAuth(self, data: list[UserAuthDBStructure]):
 
-        if data.password_hash == None or data.password_hash == "":
-            command = """
-                        UPDATE userauth
-                        SET 
-                        name = %s,
-                        uuid = %s, 
-                        email = %s,
-                        isAdmin = %s
-                        where id = %s       
-                    """
-            args = (data.name, data.uuid, data.email, data.isAdmin, data.id)
-        else:
-            command = """
+        commandList = []
+        argsList = []
+        command = ''
+        args = ()
+        for item in data:
+
+            if item.password_hash == None or item.password_hash == "":
+                command = """
                             UPDATE userauth
                             SET 
                             name = %s,
                             uuid = %s, 
                             email = %s,
-                            isAdmin = %s,
-                            password_hash = %s
+                            isAdmin = %s
                             where id = %s       
                         """
-            args = (data.name, data.uuid, data.email, data.isAdmin, data.password_hash, data.id)
-        self.dbAccessServiceInstance.dbUpdateRecord(command, args)
+                args = (item.name, item.uuid, item.email, item.isAdmin, item.id)
+            else:
+                command = """
+                                UPDATE userauth
+                                SET 
+                                name = %s,
+                                uuid = %s, 
+                                email = %s,
+                                isAdmin = %s,
+                                password_hash = %s
+                                where id = %s       
+                            """
+                args = (item.name, item.uuid, item.email, item.isAdmin, item.password_hash, item.id)
+            commandList.append(command)
+            argsList.append(args)
+        self.dbAccessServiceInstance.dbUpdateRecord(commandList, argsList)
 
     
     def getAllUsers(self):
