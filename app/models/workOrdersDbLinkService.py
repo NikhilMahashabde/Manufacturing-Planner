@@ -5,7 +5,7 @@ import json
 
 #when adding to DB
 class WorkOrderListDataStructure():
-    def __init__(self, wonumber:int, itemnumber:str, itemdescription:str, project:str, quantity:int, duedate:str) -> None:
+    def __init__(self, wonumber:int = None, itemnumber:str = None, itemdescription:str = None, project:str = None, quantity:int = None, duedate:str = None) -> None:
         self.wonumber: int = wonumber
         self.itemnumber: str = itemnumber
         self.itemdescription: str = itemdescription
@@ -18,7 +18,7 @@ class WorkOrderListDataStructure():
 
 #when returning data from db 
 class WorkOrderListDataDBStructure(WorkOrderListDataStructure):
-    def __init__(self, id:int, wonumber:int, itemnumber:str, itemdescription:str, project:str, quantity:int, duedate:str) -> None:
+    def __init__(self, id:int = None, wonumber:int = None, itemnumber:str = None, itemdescription:str = None, project:str = None, quantity:int = None, duedate:str = None) -> None:
         self.id = id
         super().__init__(wonumber, itemnumber, itemdescription, project, quantity, duedate)
 
@@ -85,10 +85,8 @@ class WorkOrdersDbLink(WorkOrdersDbLinkInterface):
 
         wolist = []
         for item in workorderData:
-            woDict = dict(zip(WorkOrderListDataDBStructure(None,None,None,None,None,None, None).__dict__.keys(), item))
+            woDict = dict(zip(WorkOrderListDataDBStructure().__dict__.keys(), item))
             wolist.append(json.dumps(woDict))
-
-        print(wolist)
        
         return wolist
 

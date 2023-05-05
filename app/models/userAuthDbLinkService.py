@@ -2,11 +2,13 @@
 import psycopg2
 from abc import ABC, abstractmethod
 from models.dbAcessService import * 
+import json
 import bcrypt
+from flask import session
 
 #when adding to DB
 class UserAuthDataStructure():
-    def __init__(self, name:str, email:str, uuid:str, isAdmin:bool , password_hash:str) -> None:
+    def __init__(self, name:str = None, email:str = None, uuid:str = None, isAdmin:bool = None, password_hash:str = None) -> None:
         self.uuid = uuid
         self.name = name
         self.email = email
@@ -18,10 +20,16 @@ class UserAuthDataStructure():
 
 #when returning data from db 
 class UserAuthDBStructure(UserAuthDataStructure):
-    def __init__(self, id:int, uuid, name:str, email:str, isAdmin:bool, password_hash:str ) -> None:
+    def __init__(self, id:int = None, uuid = None, name:str = None, email:str = None, isAdmin:bool = False, password_hash:str = None ) -> None:
         self.id = id
         super().__init__(name, email, uuid, isAdmin, password_hash)
-        
+
+    def validateUser(self, emailEntry:str, password:str= None):
+        if ((self.email == emailEntry) and bcrypt.checkpw(password.encode(), self.password_hash.encode())):
+            session["user_id"] = self.id
+            return True
+        return False
+
 
 #usser database interface -> calls on db access instance. 
 
@@ -50,6 +58,7 @@ class UserAuthDbLinkInterface(ABC):
     @abstractmethod
     def deleteUserAuthRecord():
         None
+
         
 
 class UserAuthDbLink(UserAuthDbLinkInterface):
@@ -94,24 +103,42 @@ class UserAuthDbLink(UserAuthDbLinkInterface):
     
     def updateUserAuth(self, data:UserAuthDBStructure):
 
-        command = """
+        if data.password_hash == None or data.password_hash == "":
+            command = """
                         UPDATE userauth
                         SET 
                         name = %s,
                         uuid = %s, 
                         email = %s,
-                        isAdmin = %s,
-                        password_hash = %s
+                        isAdmin = %s
                         where id = %s       
                     """
-        args = (data.name, data.uuid, data.email, data.isAdmin, data.password_hash, data.id)
+            args = (data.name, data.uuid, data.email, data.isAdmin, data.id)
+        else:
+            command = """
+                            UPDATE userauth
+                            SET 
+                            name = %s,
+                            uuid = %s, 
+                            email = %s,
+                            isAdmin = %s,
+                            password_hash = %s
+                            where id = %s       
+                        """
+            args = (data.name, data.uuid, data.email, data.isAdmin, data.password_hash, data.id)
         self.dbAccessServiceInstance.dbUpdateRecord(command, args)
 
     
     def getAllUsers(self):
         searchQuery = f"SELECT * FROM userauth"
         results = self.dbAccessServiceInstance.dbReadRecord(searchQuery)
-        return results
+
+        userList = []
+        for item in results:
+            userDict = dict(zip(UserAuthDBStructure().__dict__.keys(), item))
+            userList.append(json.dumps(userDict))
+        print(userList)
+        return userList
     
     def deleteUserAuthRecord(self, id):
         searchQuery = f"DELETE FROM userauth WHERE id = %s"

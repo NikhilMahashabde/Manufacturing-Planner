@@ -14,11 +14,11 @@ OOP - class and service setup
 
 **routes**
 
-[
+
 /workorders/api
 /workorders/api/<id>
 
-]
+[ work order update -> ]
 
 /forms/users/update
 - update all user data and passwords - admin only. 04/05
@@ -29,6 +29,11 @@ OOP - class and service setup
 - main WO page to show all WOs
 - edit WO -> take you to WO specific page
 - add flags to WOs
+
+- multiinput to database or single input based on data dump going in
+- api for datacalls on front end. 
+- working check boxes. 
+- 
 
 
 **LOGIN AND SECURITY **

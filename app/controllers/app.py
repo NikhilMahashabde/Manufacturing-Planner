@@ -24,18 +24,16 @@ def launch():
 
 @app.context_processor
 def templateData():
-    items = g.workOrders.getAllWorkOrders()
-    allWorkOrders = [json.loads(order) for order in items]
-
     appData = dict(
         session = session.get("user_id", ""),
         userAuthId = UserAuthService().getUserAuthName(session),
         userAuthData = UserAuthService().getUserAuthData(session) if session.get("user_id", "") else "",
-        allWorkOrders = allWorkOrders
     )
     return appData
-######################################## public routes
+########################################################################### public routes
 
+
+####################################### LOGIN ###################################
 @app.route("/login")
 def routeLogin():
     return (render_template('login.html') if not session.get("user_id", "") else redirect(url_for('routeLanding')))
@@ -43,6 +41,7 @@ def routeLogin():
 @app.route("/login", methods=["POST"])
 def routeCheckLogin():
     return (redirect (url_for('routeLanding')) if (g.userAuth.checkLogin(request, session)) else redirect(url_for('routeLogin')))
+##########################################################################
 
 @app.route("/about")
 def routeAbout():
@@ -56,6 +55,9 @@ def routeContact():
 def routeLogout():
     session.pop('user_id', None)
     return redirect(url_for("routeLogin"))
+
+
+####################### REGISTER ###########################################
 
 @app.route("/forms/user/add")
 def routeAddUserAuthForm():
@@ -77,6 +79,18 @@ def routeLanding():
     # connection = psycopg2.connect(host=os.getenv("PGHOST"), user=os.getenv("PGUSER"), password=os.getenv("PGPASSWORD"), port=os.getenv("PGPORT"), dbname=os.getenv("PGDATABASE"))
     return render_template('workorders.html')
 
+# work orders page real api data fetching
+
+# @app.route("/workorders/all")
+# def routeWorkOrdersAll():
+#     return render_template('workordersAll.html')
+############## REAL API ################################################################
+@app.route("/api/workorders/all")
+def apiWorkOrdersAll():
+    return g.workOrders.getAllWorkOrders()
+################################################################
+# work orders page real api data fetching
+
 @app.route("/forms/workorder/add")
 def routeWorkOrderAddForm():
     return render_template('addWorkOrder.html')
@@ -86,19 +100,25 @@ def routeWorkOrderAddApi():
     g.workOrders.workOrderAdd(request)
     return redirect(url_for('routeLanding'))
 
-@app.route("/api/workorder/process", methods=['POST', 'GET'])
-def routeWorkOrderDeleteApi():
-    print(request.form)
+# @app.route("/api/workorder/process", methods=['POST', 'GET'])
+# def routeWorkOrderDeleteApi():
 
-    # g.workOrders.workOrderDelete(request)
-    return redirect(url_for('routeLanding'))
-
+#     # g.workOrders.workOrderDelete(request)
+#     return redirect(url_for('routeLanding'))
 
 ######################################### admin routes ################################################
 
+############## REAL API ##########
 @app.route("/forms/userAuth/update")
 def routeUpdateUserAuthForm():
-    return render_template('updateUsers.html', allUserAuthData = g.userAuth.getAllUserAuthData())
+    return render_template('updateUsers.html')
+
+############## REAL API ###################################################################
+@app.route("/api/userAuth/allusers")
+def routeApiUserAuthAllUsers():
+    return g.userAuth.getAllUserAuthData()
+############## REAL API ###################################################################
+
 
 @app.route("/api/userAuth/update", methods=['POST'])
 def routeUpdateUserAuthApi():

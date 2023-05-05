@@ -17,8 +17,8 @@
             <th scope="password">Admin</th>
           </tr>
         </thead>
-        <tbody>
-
+        <tbody id="usertableUpdate">
+<!-- 
             {% for item in allUserAuthData %}
           <tr>
             <th scope="row">    
@@ -44,7 +44,7 @@
             </td>
           </tr>
 
-          {% endfor %}
+          {% endfor %} -->
 
           <button type="submit">Submit Updates</button>
         </tbody>
@@ -108,8 +108,8 @@
         <th scope="delete">Select</th>
       </tr>
     </thead>
-    <tbody>
-
+    <tbody id="usertableDel">
+<!-- 
       {% for item in allUserAuthData %}
         <tr>
           <th scope="row">    
@@ -132,11 +132,101 @@
 
           </td>
         </tr>
-      {% endfor %}
+      {% endfor %} -->
       <button type="submit">Delete Selection</button>
     </tbody>
   </table>
 </form>
 
+
+{% endblock %}
+
+
+{% block jsscripts %}
+<script>
+
+  function createInputDisabledInRow(row, valueInput = "", name){
+    const inputElement = document.createElement("input")
+    inputElement.setAttribute('class', 'form-control');
+    inputElement.setAttribute('type', 'text');
+    inputElement.setAttribute('aria-label', 'Disabled input example');
+    inputElement.setAttribute('readonly', '');
+    inputElement.name = name
+    cell = row.insertCell();
+    cell.appendChild(inputElement)
+    inputElement.value = valueInput
+    return inputElement
+  }
+
+  function createInputElementInRow(row, valueInput = "", name) {
+    const inputElement = document.createElement('input');
+    inputElement.setAttribute('class', 'form-control');
+    inputElement.setAttribute('type', 'text');
+    inputElement.setAttribute('aria-label', 'Default input example');
+    inputElement.name = name
+    cell = row.insertCell();
+    cell.appendChild(inputElement)
+    inputElement.value = valueInput
+  return inputElement;
+}
+
+  fetch('/api/userAuth/allusers')
+    .then(response => response.json())
+    .then(data => {
+      const userlist = data.map(data => JSON.parse(data))
+
+      console.log(userlist)
+      let usertable = document.getElementById("usertableUpdate");
+      let deletetable = document.getElementById("usertableDel");
+      for (let i = 0; i < userlist.length; i++) {
+          let row = usertable.insertRow();
+          let delRow = deletetable.insertRow();
+
+          let inputId = createInputDisabledInRow(row,userlist[i].id, userlist[i].id + ".id")
+          let inputUUID = createInputElementInRow(row,userlist[i].uuid, userlist[i].id + ".uuid")     
+          let inputName = createInputElementInRow(row,userlist[i].name, userlist[i].id + ".name")    
+          let inputEmail = createInputElementInRow(row,userlist[i].name, userlist[i].id+ ".email")    
+          let inputNewPassword = createInputElementInRow(row,"", userlist[i].id + ".password")    
+
+           let inputAdmin = document.createElement("input")
+           cell.appendChild(inputAdmin);
+           inputAdmin.name = userlist[i].id + ".isadmin"
+           inputAdmin.type = "checkbox"
+           inputAdmin.value = true
+          
+
+          createInputDisabledInRow(delRow,userlist[i].id, userlist[i].id + ".id")
+          createInputElementInRow(delRow,userlist[i].uuid, userlist[i].id + ".uuid")   
+          createInputElementInRow(delRow,userlist[i].name, userlist[i].id + ".name") 
+          createInputElementInRow(delRow,userlist[i].name, userlist[i].id+ ".email") 
+
+          inputAdminDel = document.createElement("input")
+          inputAdminDel.name = userlist[i].id + ".isadmin"
+          inputAdmin.type = "checkbox"
+          inputAdmin.checked = userlist[i].isAdmin
+          cell = row.insertCell();
+          cell.appendChild(inputAdmin);
+               
+         
+
+          // let cell2 = row.insertCell();
+          // cell2.textContent = workorders[i].itemnumber;
+
+          // let cell3 = row.insertCell();
+          // cell3.textContent = workorders[i].itemdescription;
+
+          // let cell4 = row.insertCell();
+          // cell4.textContent = workorders[i].quantity;
+
+          // let cell5 = row.insertCell();
+          // cell5.textContent = workorders[i].project;
+          
+          // let cell6 = row.insertCell();
+          // cell6.textContent = workorders[i].duedate;
+        }
+      }
+    )
+    .catch(error => console.error(error));
+</script>
 
 {% endblock %}

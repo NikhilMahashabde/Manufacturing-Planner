@@ -42,13 +42,12 @@ class UserAuthService(UserAuthInterface):
         email = request.form.get("email")
         password = request.form.get("password")
         userAuthData:UserAuthDBStructure = self.userDBLinkService.getUserAuthByEmail(email)
+        return userAuthData.validateUser(email, password)
 
-        print("Email:",userAuthData.email,"emailEntered: ", email, "pwenter: ",password, "pwEnterEncoded: ", password.encode(),"pwDBhash:", userAuthData.password_hash, "- " )
-
-        if ((userAuthData.email == email) and bcrypt.checkpw(password.encode(), userAuthData.password_hash.encode())):
-            session["user_id"] = userAuthData.id
-            return True
-        return False
+        # if ((userAuthData.email == email) and bcrypt.checkpw(password.encode(), userAuthData.password_hash.encode())):
+        #     session["user_id"] = userAuthData.id
+        #     return True
+        # return False
     
     def getUserAuthData(self, session):
         userAuthData:UserAuthDBStructure = self.userDBLinkService.getUserAuthById(session.get("user_id", ""))
@@ -79,29 +78,31 @@ class UserAuthService(UserAuthInterface):
 
     def updateAllUserAuthData(self, request):
         
-        formIdCount:int = len(request.form)/6
+        formIdCount:int = len(request.form)
         formData = list(request.form.items())
         print(request.form)
+        print(formData)
+        print(formIdCount)
         i:int = 0
         entryCount:int = 0
-        while entryCount < formIdCount:
-            i+=1
-            if f'{i}.id' in formData[entryCount*6]:
+        for key,value in formData:
+            if key.endswith('.id'):
+                i = key.split('.')[0]
+                print(f'found -> {i}.id')
+                passwordUpdate = ""
+                if request.form.get(f'{i}.password') != "": passwordUpdate = bcrypt.hashpw(request.form.get(f'{i}.password').encode(), bcrypt.gensalt()).decode()
 
-                currentData:UserAuthDBStructure = self.userDBLinkService.getUserAuthById(i)
-                if request.form.get(f'{i}.password') != "":
-                    passwordUpdate = bcrypt.hashpw(request.form.get(f'{i}.password').encode(), bcrypt.gensalt()).decode()
-                else:
-                    passwordUpdate = currentData.password_hash
 
                 item:UserAuthDBStructure = UserAuthDBStructure(request.form.get(f'{i}.id'),
                                                                 request.form.get(f'{i}.uuid'),
                                                                 request.form.get(f'{i}.name'),
                                                                 request.form.get(f'{i}.email'),
-                                                                request.form.get(f'{i}.isadmin'),
+                                                                request.form.get(f'{i}.isadmin') or False,
                                                                 passwordUpdate)
                 self.userDBLinkService.updateUserAuth(item)
                 entryCount += 1
+        print("failed")
+        return True
                 
 
 
