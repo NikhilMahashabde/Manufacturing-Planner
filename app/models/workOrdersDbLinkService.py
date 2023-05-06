@@ -47,6 +47,10 @@ class WorkOrdersDbLinkInterface(ABC):
     @abstractmethod
     def deleteWorkOrderRecords():
         None
+    
+    @abstractmethod
+    def updateWOlist():
+        None
     #  def updateWorkOrderByWoNumber():
     #     None
     
@@ -121,7 +125,31 @@ class WorkOrdersDbLink(WorkOrdersDbLinkInterface):
         print(commandList)
         self.dbAccessServiceInstance.dbDeleteRecord(commandList)
         return True
+    
+    def updateWOlist(self, data):
+        print("received data.....", data)
+        commandList = []
+        argsList = []
+        command = ''
+        args = ()
+        for item in data:
+            command = """
+                                UPDATE workorders
+                                SET 
+                                wonumber = %s,
+                                itemnumber = %s, 
+                                itemdescription = %s,
+                                quantity = %s,
+                                project = %s,
+                                duedate = %s
+                                WHERE id = %s       
+                            """
+            args = (item.wonumber, item.itemnumber, item.itemdescription, item.quantity, item.project, item.duedate, item.id)
+            commandList.append(command)
+            argsList.append(args)
 
+        self.dbAccessServiceInstance.dbUpdateRecord(commandList, argsList)
+    
 
     # def getUserAuthByEmail(self, emailId):
     #     searchQuery = f"SELECT * FROM userdata WHERE email = '{emailId}'"

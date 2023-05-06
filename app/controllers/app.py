@@ -123,7 +123,7 @@ def apiRouteWorkOrderEditById(woid:int):
             return redirect(url_for('routeLanding'))
 
     #proces WO update
-    #process WO delete
+    g.workOrders.updateWorkOrder(request)
     return redirect(f"/workorder/{woid}")
 
 

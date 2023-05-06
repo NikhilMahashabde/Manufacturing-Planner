@@ -67,12 +67,12 @@
 {% block jsscripts %}
 <script>
  
-function createInputDisabledInRow(row, valueInput = "", name){
+function createInputHiddenInRow(row, valueInput = "", name){
     const inputElement = document.createElement("input")
     inputElement.setAttribute('class', 'form-control');
     inputElement.setAttribute('type', 'text');
     inputElement.setAttribute('aria-label', 'Disabled input example');
-    inputElement.setAttribute('readonly', '');
+    inputElement.setAttribute('hidden', '');
     inputElement.name = name
     cell = row.insertCell();
     cell.appendChild(inputElement)
@@ -91,6 +91,7 @@ function createInputElementInRow(row, valueInput = "", name) {
   inputElement.value = valueInput
   return inputElement;
 }
+
 
 fetch('/api/workorder/{{ idnumber }}')
   .then(response => response.json())
@@ -114,13 +115,14 @@ fetch('/api/workorder/{{ idnumber }}')
         // tickbox.type = "checkbox" 
         // tickbox.name = workorder[i].wonumber + ".selected";
         // cell0.appendChild(tickbox)
-
+        
         let wonumber = createInputElementInRow(row, workorder[i].wonumber, workorder[i].id +".wonumber")
         let itemnumber = createInputElementInRow(row, workorder[i].itemnumber, workorder[i].id +".itemnumber")
         let itemdescription = createInputElementInRow(row, workorder[i].itemdescription, workorder[i].id +".itemdescription")
         let quantity = createInputElementInRow(row, workorder[i].quantity, workorder[i].id +".quantity")
         let project = createInputElementInRow(row, workorder[i].project, workorder[i].id +".project")
         let duedate = createInputElementInRow(row, workorder[i].duedate, workorder[i].id +".duedate")
+        let woid = createInputHiddenInRow(row, workorder[i].id, workorder[i].id + ".id")
 
       }
     }

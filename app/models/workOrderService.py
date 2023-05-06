@@ -22,9 +22,9 @@ class WorkOrderServiceInterface(ABC):
         
         # def getMenuItem(self):
         #     pass
-
-        # def menuItemEdit(self):
-        #     pass
+        @abstractmethod
+        def updateWorkOrder():
+            pass
 
         @abstractmethod
         def workOrderDelete(self, session):
@@ -87,5 +87,28 @@ class WorkOrderService(WorkOrderServiceInterface):
         #     return True
         # elif 'submitNo' in request.form:
         #     return False
+
+    def updateWorkOrder(self, request):
+        
+        formData = list(request.form.items())
+        datalist: list[WorkOrderListDataDBStructure] = []
+        print(formData)
+        for key, value in formData:
+            if key.endswith('.id'):
+                i = key.split('.')[0]
+                item:WorkOrderListDataDBStructure = WorkOrderListDataDBStructure(request.form.get(f'{i}.id'),
+                                                                request.form.get(f'{i}.wonumber'),
+                                                                request.form.get(f'{i}.itemnumber'),
+                                                                request.form.get(f'{i}.itemdescription'),
+                                                                request.form.get(f'{i}.project'),
+                                                                request.form.get(f'{i}.quantity'),
+                                                                request.form.get(f'{i}.duedate'))
+                print("item:.....",item)
+                datalist.append(item)
+        print("datlist=:.....", datalist)
+
+        self.WorkOrderDBInstance.updateWOlist(datalist)
+
+        return True
 
 __all__ = ['WorkOrderService', 'WorkOrderServiceInterface']
