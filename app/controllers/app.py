@@ -26,8 +26,7 @@ def launch():
 def templateData():
     appData = dict(
         session = session.get("user_id", ""),
-        userAuthId = UserAuthService().getUserAuthName(session),
-        userAuthData = UserAuthService().getUserAuthData(session) if session.get("user_id", "") else "",
+      #  userAuthData = UserAuthService().getUserAuthData(session) if session.get("user_id", "") else "",
     )
     return appData
 ########################################################################### public routes
@@ -62,6 +61,7 @@ def routeLogout():
 @app.route("/forms/user/add")
 def routeAddUserAuthForm():
     return render_template('AddUser.html')
+
 
 @app.route("/api/user/add", methods=['POST'])
 def routeApiAddUserAuth():
