@@ -3,4 +3,3 @@ Gunicorn
 psycopg2
 datetime
 bcrypt
-json
