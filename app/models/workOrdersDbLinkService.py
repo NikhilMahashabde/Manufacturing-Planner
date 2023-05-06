@@ -40,8 +40,11 @@ class WorkOrdersDbLinkInterface(ABC):
     def getAllWorkOrders():
         None
 
-    # @abstractmethod
-    # def updateWorkOrderByWoNumber():
+    @abstractmethod
+    def getWorkOrderById():
+        None
+    
+    #  def updateWorkOrderByWoNumber():
     #     None
         
 
@@ -89,6 +92,22 @@ class WorkOrdersDbLink(WorkOrdersDbLinkInterface):
             wolist.append(json.dumps(woDict))
        
         return wolist
+    
+    def getWorkOrderById(self, woid:int):
+
+        command = f"""SELECT * FROM {self.tableName} WHERE wonumber = {woid}"""
+        workorderData = self.dbAccessServiceInstance.dbReadRecord(command)
+        woList = self.convertToJson(workorderData)
+        print(woList)
+        return woList
+
+    def convertToJson(self, dataInput):
+        wolist = []
+        for item in dataInput:
+            WoDict = dict(zip(WorkOrderListDataDBStructure().__dict__.keys(), item))
+            wolist.append(json.dumps(WoDict))
+        return wolist
+
 
     # def getUserAuthByEmail(self, emailId):
     #     searchQuery = f"SELECT * FROM userdata WHERE email = '{emailId}'"

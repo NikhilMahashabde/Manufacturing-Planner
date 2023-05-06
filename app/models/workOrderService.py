@@ -9,8 +9,14 @@ class WorkOrderServiceInterface(ABC):
         def getAllWorkOrders(self):
             pass
 
+        @abstractmethod
         def workOrderAdd(self, request):
             pass
+
+        @abstractmethod
+        def getWorkOrderById(self, woid:int):
+            pass
+        
         
 
         # def menuAdd(self):
@@ -22,6 +28,7 @@ class WorkOrderServiceInterface(ABC):
         # def menuItemEdit(self):
         #     pass
 
+        @abstractmethod
         def workOrderDelete(self, session):
              pass
         
@@ -49,7 +56,10 @@ class WorkOrderService(WorkOrderServiceInterface):
             self.WorkOrderDBInstance.addWorkOrder(newWorkOrder)
             i+=1
         return True
-
+    
+    def getWorkOrderById(self, woid:int):
+        return self.WorkOrderDBInstance.getWorkOrderById(woid)
+    
     # def getMenuItem(self, menuId):
     #     searchById = 'id'
     #     result = self.fTdatabaseInstance.searchFoodRecord(searchById, menuId)
