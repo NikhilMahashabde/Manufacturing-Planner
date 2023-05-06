@@ -60,7 +60,7 @@ def routeLogout():
 
 @app.route("/forms/user/add")
 def routeAddUserAuthForm():
-    return render_template('AddUser.html')
+    return render_template('addUser.html')
 
 
 @app.route("/api/user/add", methods=['POST'])
