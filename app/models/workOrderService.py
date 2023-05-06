@@ -16,9 +16,7 @@ class WorkOrderServiceInterface(ABC):
         @abstractmethod
         def getWorkOrderById(self, woid:int):
             pass
-        
-        
-
+               
         # def menuAdd(self):
         #     pass
         
@@ -70,10 +68,19 @@ class WorkOrderService(WorkOrderServiceInterface):
     #     self.newItemId = request.form['id']
     #     self.fTdatabaseInstance.updateFoodRecord(self.newItemId, self.newItemEdit)
 
-    def workOrderDelete(self, request):
-        itemCount = len(request.form)
-        print(itemCount)
-        print(request.form)
+    def workOrderDelete(self, request, wonumber:int = ""):
+        
+        idList: int = []
+        if wonumber != "": idList.append(wonumber)
+
+        requestList = list(request.form.items())
+        for key,value in requestList:
+            if value == "on":
+                idList.append(key.split('.')[0])
+
+        print(idList)        
+        self.WorkOrderDBInstance.deleteWorkOrderRecords(idList)
+            
         return
         # if 'submitYes' in request.form:
         #     self.fTdatabaseInstance.deleteFoodRecord(self.newItemId)
