@@ -74,22 +74,16 @@ class UserAuthService(UserAuthInterface):
     def getAllUserAuthData(self):
         allUserData = self.userDBLinkService.getAllUsers()
         return allUserData
-    
 
     def updateAllUserAuthData(self, request):
         
-
         formData = list(request.form.items())
-        print(request.form)
-        print(formData)
         datalist: list[UserAuthDBStructure] = []
         for key,value in formData:
             if key.endswith('.id'):
                 i = key.split('.')[0]
-                print(f'found -> {i}.id')
                 passwordUpdate = ""
                 if request.form.get(f'{i}.password') != "": passwordUpdate = bcrypt.hashpw(request.form.get(f'{i}.password').encode(), bcrypt.gensalt()).decode()
-
 
                 item:UserAuthDBStructure = UserAuthDBStructure(request.form.get(f'{i}.id'),
                                                                 request.form.get(f'{i}.uuid'),
@@ -97,15 +91,11 @@ class UserAuthService(UserAuthInterface):
                                                                 request.form.get(f'{i}.email'),
                                                                 request.form.get(f'{i}.isadmin') or False,
                                                                 passwordUpdate)
-                
                 datalist.append(item)
                 
         self.userDBLinkService.updateUserAuth(datalist)
-        print("failed")
         return True
-                
-
-
+        
     def deleteUserAuthData(self, request):
 
         for item in request.form:
