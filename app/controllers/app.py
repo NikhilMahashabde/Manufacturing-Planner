@@ -26,7 +26,7 @@ def launch():
 def templateData():
     appData = dict(
         session = session.get("user_id", ""),
-      #  userAuthData = UserAuthService().getUserAuthData(session) if session.get("user_id", "") else "",
+        userAuthData = UserAuthService().getUserAuthData(session) if session.get("user_id", "") else "",
     )
     return appData
 ########################################################################### public routes
