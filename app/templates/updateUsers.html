@@ -18,6 +18,7 @@
           </tr>
         </thead>
         <tbody id="usertableUpdate">
+
 <!-- 
             {% for item in allUserAuthData %}
           <tr>
@@ -49,6 +50,9 @@
           <button type="submit">Submit Updates</button>
         </tbody>
       </table>
+      <div class="spinner-border" role="status" id="loadingSpinner1" style="text-align: 'center;'">
+        <span class="visually-hidden">Loading...</span>
+      </div>
 
 
 </form>
@@ -109,6 +113,7 @@
       </tr>
     </thead>
     <tbody id="usertableDel">
+
 <!-- 
       {% for item in allUserAuthData %}
         <tr>
@@ -136,6 +141,9 @@
       <button type="submit">Delete Selection</button>
     </tbody>
   </table>
+  <div class="spinner-border" role="status" id="loadingSpinner2" style="text-align: 'center;'">
+    <span class="visually-hidden">Loading...</span>
+  </div>
 </form>
 
 
@@ -178,6 +186,13 @@
       console.log(userlist)
       let usertable = document.getElementById("usertableUpdate");
       let deletetable = document.getElementById("usertableDel");
+      usertable.textContent="";
+      deletetable.textContent="";
+      
+      [...document.getElementsByClassName("spinner-border")].forEach(element => {
+        element.remove()
+      });
+
       for (let i = 0; i < userlist.length; i++) {
           let row = usertable.insertRow();
           let delRow = deletetable.insertRow();

@@ -84,10 +84,23 @@ def routeLanding():
 # @app.route("/workorders/all")
 # def routeWorkOrdersAll():
 #     return render_template('workordersAll.html')
+
+@app.route("/workorder/<int:idnumber>")
+def workOrderDetail(idnumber:int):
+    return render_template('workorderdetail.html', idnumber = idnumber )
+
 ############## REAL API ################################################################
+############## REAL API ################################################################
+############## REAL API ################################################################
+
 @app.route("/api/workorders/all")
 def apiWorkOrdersAll():
     return g.workOrders.getAllWorkOrders()
+
+@app.route("/api/workorder/<int:woid>")
+def apiGetWorkOrderById(woid:int):
+    return g.workOrders.getWorkOrderById(woid)
+
 ################################################################
 # work orders page real api data fetching
 

@@ -9,9 +9,9 @@ from flask import session
 #when adding to DB
 class UserAuthDataStructure():
     def __init__(self, name:str = None, email:str = None, uuid:str = None, isAdmin:bool = None, password_hash:str = None) -> None:
-        self.uuid = uuid
-        self.name = name
-        self.email = email
+        self.uuid:str = uuid
+        self.name:str = name
+        self.email:str = email
         self.isAdmin:bool = isAdmin
         self.password_hash:str = password_hash
 
@@ -21,7 +21,7 @@ class UserAuthDataStructure():
 #when returning data from db 
 class UserAuthDBStructure(UserAuthDataStructure):
     def __init__(self, id:int = None, uuid = None, name:str = None, email:str = None, isAdmin:bool = False, password_hash:str = None ) -> None:
-        self.id = id
+        self.id:int = id
         super().__init__(name, email, uuid, isAdmin, password_hash)
 
     def validateUser(self, emailEntry:str, password:str= None):
@@ -57,9 +57,7 @@ class UserAuthDbLinkInterface(ABC):
     @abstractmethod
     def deleteUserAuthRecord():
         None
-
-        
-
+      
 class UserAuthDbLink(UserAuthDbLinkInterface):
     def __init__(self) -> None:
         self.dbAccessServiceInstance: DatabaseAcessInterface = PGDBAcessService()
@@ -134,17 +132,16 @@ class UserAuthDbLink(UserAuthDbLinkInterface):
             commandList.append(command)
             argsList.append(args)
         self.dbAccessServiceInstance.dbUpdateRecord(commandList, argsList)
-
     
     def getAllUsers(self):
         searchQuery = f"SELECT * FROM userauth"
         results = self.dbAccessServiceInstance.dbReadRecord(searchQuery)
 
+        #JSON string output for API 
         userList = []
         for item in results:
             userDict = dict(zip(UserAuthDBStructure().__dict__.keys(), item))
             userList.append(json.dumps(userDict))
-        print(userList)
         return userList
     
     def deleteUserAuthRecord(self, id):
@@ -152,10 +149,8 @@ class UserAuthDbLink(UserAuthDbLinkInterface):
         args = id
         self.dbAccessServiceInstance.dbDeleteRecord(searchQuery, args)
 
-
 #updatemain:UserAuthDBStructure = UserAuthDBStructure(1, '123', 'nikhil', 'nik.m1992@gmail.com', )., True)
 # bcrypt.hashpw('test'.encode(), bcrypt.gensalt().decode()
-
 
 __all__ = ['UserAuthDbLink','UserAuthDbLinkInterface', 'UserAuthDBStructure', 'UserAuthDataStructure']
 
