@@ -75,9 +75,10 @@ class PGDBAcessService(DatabaseAcessInterface):
         self.connection.commit()
         self.dbClose()
 
-    def dbDeleteRecord(self,command, args):
+    def dbDeleteRecord(self, commandList):
         self.dbConnect()
-        self.cursor.execute(command, (args))
+        for command in commandList:
+            self.cursor.execute(command)
         self.connection.commit()
         self.dbClose()
 

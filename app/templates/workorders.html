@@ -11,12 +11,9 @@
 {% block main %}
 
 <button onclick="window.location.href='/forms/workorder/add'">Create New Order</button>
-
-<form method="POST" action="/api/workorder/process">
-
+<form method="POST" action="/api/workorders/process">
+  
   <button type="submit" name="wo" value="delete">Delete Selected</button>
-  <button type="submit" name="wo" value="update">Update Work Orders</button>
-
   <!-- <table class="table">
     <thead>
       <tr>

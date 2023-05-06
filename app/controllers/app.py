@@ -101,6 +101,33 @@ def apiWorkOrdersAll():
 def apiGetWorkOrderById(woid:int):
     return g.workOrders.getWorkOrderById(woid)
 
+
+@app.route("/workorder/<int:woid>/edit", methods=['POST'])
+def apiRouteWorkOrderById(woid:int):
+    print(request.form)
+
+    #check if delete was seelected
+    for (key,value) in list(request.form.items()):
+        if value == "delete":
+            g.workOrders.workOrderDelete(request, woid)
+            return redirect(url_for('routeLanding'))
+   
+    return render_template('workorderdetailedit.html', idnumber = woid )
+
+@app.route("/api/workorder/<int:woid>/process", methods=['POST'])
+def apiRouteWorkOrderEditById(woid:int):
+    print(request.form)
+    for (key,value) in list(request.form.items()):
+        if value == "delete":
+            g.workOrders.workOrderDelete(request, woid)
+            return redirect(url_for('routeLanding'))
+
+    #proces WO update
+    #process WO delete
+    return redirect(f"/workorder/{woid}")
+
+
+
 ################################################################
 # work orders page real api data fetching
 
@@ -113,11 +140,14 @@ def routeWorkOrderAddApi():
     g.workOrders.workOrderAdd(request)
     return redirect(url_for('routeLanding'))
 
-# @app.route("/api/workorder/process", methods=['POST', 'GET'])
-# def routeWorkOrderDeleteApi():
-
-#     # g.workOrders.workOrderDelete(request)
-#     return redirect(url_for('routeLanding'))
+@app.route("/api/workorders/process", methods=['POST', 'GET'])
+def routeWorkOrderDeleteSelectedApi():
+    for key,value in list(request.form.items()):
+        if key == "wo" and value == 'delete':
+            g.workOrders.workOrderDelete(request)
+            print(request.form)
+        # g.workOrders.workOrderDelete(request)
+    return redirect(url_for('routeLanding'))
 
 ######################################### admin routes #########################################################################
 

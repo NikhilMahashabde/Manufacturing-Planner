@@ -12,29 +12,33 @@
 {% block main %}
 
 <!-- <button onclick="window.location.href='/forms/workorder/add'">Create New Order</button> -->
-  <form method="POST" action="/api/workorder/process">
+<form method="POST" action="/workorder/{{ idnumber }}/edit">
 
-    <button type="submit" name="wo" value="delete">Delete Selected</button>
-    <button type="submit" name="wo" value="update">Update Work Orders</button>
+    <div style="margin: 10px; background-color: white;">
+      <button type="submit" name="{{ idnumber }}" value="delete">Delete Work Order {{ idnumber }} </button>
+      <button type="submit" name="{{ idnumber }}" value="update">Edit Work order</button>
+    </div>
+    
+    <div style="margin: 10px; background-color: white;">
 
-    <table class="table" id = "workorder.{{ idnumber }}.table" >
-      <thead>
-        <tr>
-          <th scope="select">Select</th>
-          <th scope="workOrderNumber">Name</th>
-          <th scope="itemNumber">Item Number</th>
-          <th scope="Itemdescription">Item Description</th>
-          <th scope="quantity">Quantity</th>
-          <th scope="project">Project</th>
-          <th scope="duedate">Due Date</th>
-        </tr>
-      </thead>
-      <tbody id="tableWorkOrder.{{ idnumber }}.Body">
+      <table class="table" id = "workorder.{{ idnumber }}.table" style="margin: 10px; background-color: white;">
+        <thead>
+          <tr>
+            <th scope="workOrderNumber">Name</th>
+            <th scope="itemNumber">Item Number</th>
+            <th scope="Itemdescription">Item Description</th>
+            <th scope="quantity">Quantity</th>
+            <th scope="project">Project</th>
+            <th scope="duedate">Due Date</th>
+          </tr>
+        </thead>
+        <tbody id="tableWorkOrder.{{ idnumber }}.Body">
+  
+        </tbody>
+      </table>
 
-      </tbody>
-    </table>
-  </form>
-
+    </div>
+   
   <div class="d-flex justify-content-center" id="loadingSpinner">
     <div class="spinner-border" role="status">
       <span class="visually-hidden">Loading...</span>
@@ -42,16 +46,15 @@
   </div>
 
 
-  <div class="mb-3">
-    <label for="formFile" class="form-label">Upload Work Order Pick Slip</label>
-    <input class="form-control" type="file" id="formFile">
+  <div class="mb-3" style="margin: 10px; background-color: white;">
+    <!-- api link -->
+   
   </div>
-  <div class="mb-3">
-    <label for="formFile" class="form-label">Upload Work Order Traveler</label>
-    <input class="form-control" type="file" id="formFile">
+  <div class="mb-3" style="margin: 10px; background-color: white";>
+    <!-- api link -->
   </div>
-
-
+  
+</form>
 
 {% endblock %}
 
@@ -75,11 +78,11 @@
           let row = woTable.insertRow();
           console.log(data[i])
 
-          let cell0 = row.insertCell();
-          let tickbox = document.createElement("input")
-          tickbox.type = "checkbox" 
-          tickbox.name = workorder[i].wonumber + ".selected";
-          cell0.appendChild(tickbox)
+          // let cell0 = row.insertCell();
+          // let tickbox = document.createElement("input")
+          // tickbox.type = "checkbox" 
+          // tickbox.name = workorder[i].wonumber + ".selected";
+          // cell0.appendChild(tickbox)
 
           let cell1 = row.insertCell();
           let woLink = document.createElement("a")

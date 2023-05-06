@@ -44,8 +44,12 @@ class WorkOrdersDbLinkInterface(ABC):
     def getWorkOrderById():
         None
     
+    @abstractmethod
+    def deleteWorkOrderRecords():
+        None
     #  def updateWorkOrderByWoNumber():
     #     None
+    
         
 
 class WorkOrdersDbLink(WorkOrdersDbLinkInterface):
@@ -107,6 +111,16 @@ class WorkOrdersDbLink(WorkOrdersDbLinkInterface):
             WoDict = dict(zip(WorkOrderListDataDBStructure().__dict__.keys(), item))
             wolist.append(json.dumps(WoDict))
         return wolist
+
+    def deleteWorkOrderRecords(self, orderNumbers):
+        commandList = []
+
+        for orderNumber in orderNumbers:
+            searchQuery = f"DELETE FROM {self.tableName} WHERE wonumber = {orderNumber}"
+            commandList.append(searchQuery)
+        print(commandList)
+        self.dbAccessServiceInstance.dbDeleteRecord(commandList)
+        return True
 
 
     # def getUserAuthByEmail(self, emailId):

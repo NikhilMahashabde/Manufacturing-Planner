@@ -1,0 +1,132 @@
+{% extends "index.html" %}
+
+{% block title %} 
+
+<a href="/"> Work Orders</a> 
+ / 
+<a href="/workorder/{{ idnumber }}"> {{ idnumber }} </a>
+/
+<a href="/workorder/{{ idnumber }}/edit"> Edit </a>
+
+{% endblock %}
+{% block tabletitle %} {{ idnumber }} {% endblock %}
+
+{% block main %}
+
+<!-- <button onclick="window.location.href='/forms/workorder/add'">Create New Order</button> -->
+<form method="POST" action="/api/workorder/{{idnumber}}/process">
+
+    <div style="margin: 10px; background-color: white;">
+      <button type="submit" name="wo" value="delete">Delete Work Order {{ idnumber }} </button>
+      <button type="submit" name="wo" value="update">Submit Changes</button>
+    </div>
+    
+
+    <div style="margin: 10px; background-color: white;">
+
+      <table class="table" id = "workorder.{{ idnumber }}.table" style="margin: 10px; background-color: white;">
+        <thead>
+          <tr>
+            <th scope="workOrderNumber">Name</th>
+            <th scope="itemNumber">Item Number</th>
+            <th scope="Itemdescription">Item Description</th>
+            <th scope="quantity">Quantity</th>
+            <th scope="project">Project</th>
+            <th scope="duedate">Due Date</th>
+          </tr>
+        </thead>
+        <tbody id="tableWorkOrder.{{ idnumber }}.Body">
+  
+        </tbody>
+      </table>
+
+    </div>
+   
+
+
+  <div class="d-flex justify-content-center" id="loadingSpinner">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+
+  <div class="mb-3" style="margin: 10px; background-color: white;">
+    <label for="formFile" class="form-label">Upload Work Order Pick Slip</label>
+    <input class="form-control" type="file" id="formFile">
+  </div>
+  <div class="mb-3" style="margin: 10px; background-color: white";>
+    <label for="formFile" class="form-label">Upload Work Order Traveler</label>
+    <input class="form-control" type="file" id="formFile">
+  </div>
+  
+</form>
+
+{% endblock %}
+
+{% block jsscripts %}
+<script>
+ 
+function createInputDisabledInRow(row, valueInput = "", name){
+    const inputElement = document.createElement("input")
+    inputElement.setAttribute('class', 'form-control');
+    inputElement.setAttribute('type', 'text');
+    inputElement.setAttribute('aria-label', 'Disabled input example');
+    inputElement.setAttribute('readonly', '');
+    inputElement.name = name
+    cell = row.insertCell();
+    cell.appendChild(inputElement)
+    inputElement.value = valueInput
+    return inputElement
+}
+
+function createInputElementInRow(row, valueInput = "", name) {
+  const inputElement = document.createElement('input');
+  inputElement.setAttribute('class', 'form-control');
+  inputElement.setAttribute('type', 'text');
+  inputElement.setAttribute('aria-label', 'Default input example');
+  inputElement.name = name
+  cell = row.insertCell();
+  cell.appendChild(inputElement)
+  inputElement.value = valueInput
+  return inputElement;
+}
+
+fetch('/api/workorder/{{ idnumber }}')
+  .then(response => response.json())
+  .then(data => {
+    console.log(data);
+    console.log(data.length);
+    const workorder = data.map(data => JSON.parse(data));
+
+    [...document.getElementsByClassName("spinner-border")].forEach(element => {
+      element.remove()
+    });
+
+    let woTable = document.getElementById("tableWorkOrder.{{idnumber}}.Body");
+    
+    for (let i = 0; i < data.length; i++) {
+        let row = woTable.insertRow();
+        console.log(data[i])
+
+        // let cell0 = row.insertCell();
+        // let tickbox = document.createElement("input")
+        // tickbox.type = "checkbox" 
+        // tickbox.name = workorder[i].wonumber + ".selected";
+        // cell0.appendChild(tickbox)
+
+        let wonumber = createInputElementInRow(row, workorder[i].wonumber, workorder[i].id +".wonumber")
+        let itemnumber = createInputElementInRow(row, workorder[i].itemnumber, workorder[i].id +".itemnumber")
+        let itemdescription = createInputElementInRow(row, workorder[i].itemdescription, workorder[i].id +".itemdescription")
+        let quantity = createInputElementInRow(row, workorder[i].quantity, workorder[i].id +".quantity")
+        let project = createInputElementInRow(row, workorder[i].project, workorder[i].id +".project")
+        let duedate = createInputElementInRow(row, workorder[i].duedate, workorder[i].id +".duedate")
+
+      }
+    }
+  )
+  .catch(error => console.error(error));
+
+</script>
+
+{% endblock %}
