@@ -34,6 +34,10 @@ class DatabaseAcessInterface(ABC):
     def dbGeneric():
         pass
 
+    @abstractmethod
+    def dbReadRecordMultiple(self, searchQuery):
+        pass
+
 ############# Specific implementation for PSQL database - implements standardised methods from interface
 
 class PGDBAcessService(DatabaseAcessInterface):
@@ -87,6 +91,21 @@ class PGDBAcessService(DatabaseAcessInterface):
         self.cursor.execute(command, (args))
         self.connection.commit()
         self.dbClose()
+
+    def dbReadRecordMultiple(self, searchTablesList):
+        self.dbConnect()
+
+        data = []
+        for command,args in searchTablesList:
+            self.cursor.execute(command, args)
+            results = self.cursor.fetchall()
+            print(results)
+            data.append(results)
+
+        return data
+
+
+
 
 
         

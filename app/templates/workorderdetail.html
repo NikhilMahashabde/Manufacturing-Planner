@@ -47,6 +47,52 @@
   </div>
 
 
+
+  <h2> Work Order status</h2>
+
+  <div id = "woStatusSwitches">
+
+
+    <div class="form-check form-check-inline" disabled>
+      <input class="form-check-input" type="checkbox" id="inlineCheckboxFirmed" value="option1" disabled>
+      <label class="form-check-label" for="inlineCheckbox1">Order Firmed</label>
+    </div>
+
+    <div class="form-check form-check-inline" disabled>
+      <input class="form-check-input" type="checkbox" id="inlineCheckboxDisassembled" value="option2" disabled>
+      <label class="form-check-label" for="inlineCheckbox2">Disassembled</label>
+    </div>
+
+    <div class="form-check form-check-inline" disabled>
+      <input class="form-check-input" type="checkbox" id="inlineCheckboxReceived" value="option1" disabled>
+      <label class="form-check-label" for="inlineCheckbox1">Order Received</label>
+    </div>
+
+    <div class="form-check form-check-inline" disabled>
+      <input class="form-check-input" type="checkbox" id="inlineCheckboxReassembled" value="option1" disabled>
+      <label class="form-check-label" for="inlineCheckbox1">Order Reassembled</label>
+    </div>
+
+    <div class="form-check form-check-inline" disabled>
+      <input class="form-check-input" type="checkbox" id="inlineCheckboxRework" value="option1" disabled>
+      <label class="form-check-label" for="inlineCheckbox1">Order Rework</label>
+    </div>
+
+    <div class="form-check form-check-inline" disabled>
+      <input class="form-check-input" type="checkbox" id="inlineCheckboxClosed" value="option1" disabled>
+      <label class="form-check-label" for="inlineCheckbox1">Order Closed</label>
+    </div>
+   
+    </div>
+
+    <div>
+      <h2>History</h2>
+
+    </div>
+
+
+
+
   <div class="mb-3" style="margin: 10px; background-color: white;">
     <!-- api link -->
    
@@ -62,23 +108,24 @@
 {% block jsscripts %}
 <script>
 
+
+
+    
+
+
   fetch('/api/workorder/{{ idnumber }}')
     .then(response => response.json())
     .then(data => {
       console.log(data);
-      console.log(data.length);
-      const workorder = data.map(data => JSON.parse(data));
-
+      console.log(data);
       [...document.getElementsByClassName("spinner-border")].forEach(element => {
         element.remove()
       });
 
       let woTable = document.getElementById("tableWorkOrder.{{idnumber}}.Body");
       
-      for (let i = 0; i < data.length; i++) {
+       for (let i = 0; i < data.header.length; i++) {
           let row = woTable.insertRow();
-          console.log(data[i])
-
           // let cell0 = row.insertCell();
           // let tickbox = document.createElement("input")
           // tickbox.type = "checkbox" 
@@ -87,24 +134,93 @@
 
           let cell1 = row.insertCell();
           let woLink = document.createElement("a")
-          woLink.href = `/workorder/${workorder[i].wonumber}`
-          woLink.textContent = workorder[i].wonumber
+          woLink.href = `/workorder/${data.header[i].wonumber}`
+          woLink.textContent = data.header[i].wonumber
           cell1.appendChild(woLink)
 
           let cell2 = row.insertCell();
-          cell2.textContent = workorder[i].itemnumber;
+          cell2.textContent = data.header[i].itemnumber;
 
           let cell3 = row.insertCell();
-          cell3.textContent = workorder[i].itemdescription;
+          cell3.textContent = data.header[i].itemdescription;
 
           let cell4 = row.insertCell();
-          cell4.textContent = workorder[i].quantity;
+          cell4.textContent = data.header[i].quantity;
 
           let cell5 = row.insertCell();
-          cell5.textContent = workorder[i].project;
+          cell5.textContent = data.header[i].project;
           
           let cell6 = row.insertCell();
-          cell6.textContent = workorder[i].duedate;
+          cell6.textContent = data.header[i].duedate;
+
+          let firmedBox = document.getElementById("inlineCheckboxFirmed")
+          if (data.detail[i].firmed){
+            firmedBox.setAttribute("checked","")
+          }
+
+          let disassembledBox = document.getElementById("inlineCheckboxFirmed")
+          if (data.detail[i].disassembled){
+            disassembledBox.setAttribute("checked","")
+          }
+
+          let receivedBox = document.getElementById("inlineCheckboxFirmed")
+          if (data.detail[i].received){
+            receivedBox.setAttribute("checked","")
+          }
+
+          let reassembledBox = document.getElementById("inlineCheckboxFirmed")
+          if (data.detail[i].firmed){
+            reassembledBox.setAttribute("checked","")
+          }
+
+          let reworkBox = document.getElementById("inlineCheckboxFirmed")
+          if (data.detail[i].rework){
+            reworkBox.setAttribute("checked","")
+          }
+
+          let closedBox = document.getElementById("inlineCheckboxFirmed")
+          if (data.detail[i].closed){
+            closedBox.setAttribute("checked","")
+          }
+          
+
+          
+
+
+          
+    // <div class="form-check form-check-inline">
+    //   <input class="form-check-input" type="checkbox" id="inlineCheckboxFirmed" value="option1">
+    //   <label class="form-check-label" for="inlineCheckbox1">Order Firmed</label>
+    // </div>
+
+    // <div class="form-check form-check-inline">
+    //   <input class="form-check-input" type="checkbox" id="inlineCheckboxDisassembled" value="option2">
+    //   <label class="form-check-label" for="inlineCheckbox2">Disassembled</label>
+    // </div>
+
+    // <div class="form-check form-check-inline">
+    //   <input class="form-check-input" type="checkbox" id="inlineCheckboxReceived" value="option1">
+    //   <label class="form-check-label" for="inlineCheckbox1">Order Received</label>
+    // </div>
+
+    // <div class="form-check form-check-inline">
+    //   <input class="form-check-input" type="checkbox" id="inlineCheckboxReassembled" value="option1">
+    //   <label class="form-check-label" for="inlineCheckbox1">Order Reassembled</label>
+    // </div>
+
+    // <div class="form-check form-check-inline">
+    //   <input class="form-check-input" type="checkbox" id="inlineCheckboxRework" value="option1">
+    //   <label class="form-check-label" for="inlineCheckbox1">Order Rework</label>
+    // </div>
+
+    // <div class="form-check form-check-inline">
+    //   <input class="form-check-input" type="checkbox" id="inlineCheckboxClosed" value="option1">
+    //   <label class="form-check-label" for="inlineCheckbox1">Order Closed</label>
+    // </div>
+
+
+          
+
         }
       }
     )

@@ -27,7 +27,7 @@ def templateData():
     print(request.path)
     appData = dict(
         session = session.get("user_id", ""),
-        userAuthData = UserAuthService().getUserAuthData(session) if session.get("user_id", "") else "",
+      #  userAuthData = UserAuthService().getUserAuthData(session) if session.get("user_id", "") else "",
         
     )
     return appData
@@ -167,8 +167,8 @@ def apiWorkOrdersAll():
     return g.workOrders.getAllWorkOrders()
 
 @app.route("/api/workorder/<int:woid>")
-def apiGetWorkOrderById(woid:int):
-    return g.workOrders.getWorkOrderById(woid)
+def apiGetWorkOrderDetailById(woid:int):
+    return g.workOrders.getWorkOrderDetailById(woid)
 
 @app.route("/api/userAuth/allusers")
 def routeApiUserAuthAllUsers():

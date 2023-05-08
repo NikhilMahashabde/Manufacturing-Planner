@@ -24,7 +24,21 @@ class WorkOrderListDataDBStructure(WorkOrderListDataStructure):
 
     def printStructure(self):
         print((item for item in self), " ")
-      
+
+# detailed status object
+
+class WorkOrderDetailDBStructure():
+    def __init__(self, id:int = None, firmed:bool = False, disassembled:bool = False, received: bool = False, reassembled:bool = False, rework:bool = False, closed: bool = False, wonumber:int = False) -> None:
+        self.id = id
+        self.firmed:bool = firmed
+        self.disassembled:bool =disassembled
+        self.received:bool = received
+        self.reassembled:bool = reassembled
+        self.rework:bool = rework
+        self.closed:bool = closed
+        self.wonumber = wonumber
+
+          
 #usser database interface -> calls on db access instance. 
 class WorkOrdersDbLinkInterface(ABC):
 
@@ -41,7 +55,7 @@ class WorkOrdersDbLinkInterface(ABC):
         None
 
     @abstractmethod
-    def getWorkOrderById():
+    def getWorkOrderHeaderById():
         None
     
     @abstractmethod
@@ -53,6 +67,16 @@ class WorkOrdersDbLinkInterface(ABC):
         None
     #  def updateWorkOrderByWoNumber():
     #     None
+    
+    def readWOheader():
+        None
+
+    def getWorkOrderHeaderByIdTest():
+        None
+
+    def convertToJson(self, dataInput, className):
+        None
+
     
         
 
@@ -79,6 +103,7 @@ class WorkOrdersDbLink(WorkOrdersDbLinkInterface):
     def addWorkOrder(self, data:WorkOrderListDataStructure):
 
         dataDict = vars(data)
+
         command = f""" 
                     INSERT INTO {self.tableName} 
                     ({", ".join(dataDict.keys())})
@@ -101,19 +126,27 @@ class WorkOrdersDbLink(WorkOrdersDbLinkInterface):
        
         return wolist
     
-    def getWorkOrderById(self, woid:int):
+    def getWorkOrderHeaderById(self, header:WorkOrderListDataDBStructure):
 
+        woid = header.wonumber
         command = f"""SELECT * FROM {self.tableName} WHERE wonumber = {woid}"""
         workorderData = self.dbAccessServiceInstance.dbReadRecord(command)
-        woList = self.convertToJson(workorderData)
-        print(woList)
+        woList = self.convertToJson(workorderData,header )
+        #print(woList)
         return woList
 
-    def convertToJson(self, dataInput):
+    def convertToJson(self, dataInput, className):
         wolist = []
         for item in dataInput:
-            WoDict = dict(zip(WorkOrderListDataDBStructure().__dict__.keys(), item))
+            WoDict = dict(zip(className.__dict__.keys(), item))
             wolist.append(json.dumps(WoDict))
+        return wolist
+    
+    def convertToDict(self, dataInput, className):
+        wolist = []
+        for item in dataInput:
+            WoDict = dict(zip(className.__dict__.keys(), item))
+            wolist.append(WoDict)
         return wolist
 
     def deleteWorkOrderRecords(self, orderNumbers):
@@ -149,7 +182,85 @@ class WorkOrdersDbLink(WorkOrdersDbLinkInterface):
             argsList.append(args)
 
         self.dbAccessServiceInstance.dbUpdateRecord(commandList, argsList)
+
+
+    def getWorkOrderHeaderByIdTest(self, header:WorkOrderListDataDBStructure):
     
+            woid = header.wonumber
+            command = f"""SELECT * FROM {self.tableName} WHERE wonumber = %s"""
+            args = (woid,)
+            return (command, args)
+    # def readWOheader(self, woid:int):
+    #      command = f"""SELECT * FROM {self.tableName} WHERE wonumber = %s"""
+    #     args = (woid,)
+    #     return (command, args)
+         
+
+# ORM objects 
+class WorkOrderDetailsDBLinkService():
+    def __init__(self) -> None:
+        self.tableName = 'workorderdetail'
+        self.dbAccessServiceInstance: DatabaseAcessInterface = PGDBAcessService()
+    
+    def addWorkOrderDetail(self, data:WorkOrderDetailDBStructure):
+
+        dataDict = vars(data)
+        dataDict.pop("id")
+        print(dataDict)
+        command = f""" 
+                    INSERT INTO {self.tableName} 
+                    ({", ".join(dataDict.keys())})
+                    VALUES 
+                    ({", ".join(["%s"] * len(dataDict))})
+                    """
+        args = tuple(dataDict.values())
+        self.dbAccessServiceInstance.dbCreateRecord(command, args)
+        return True
+    
+    def getWorkOrderDetailById(self, detail:WorkOrderDetailDBStructure):
+
+        woid = detail.wonumber
+        command = f"""SELECT * FROM {self.tableName} WHERE wonumber = %s"""
+        args = (woid,)
+        return (command, args)
+    
+
+        # woList = self.convertToJson(workorderData)
+        # #print(woList)
+        # return woList
+    
+
+
+# ORM objects 
+# class WorkOrderHistoryDBLinkService():
+
+# # ORM objects 
+# class WorkOrderHistoryDBLinkService():
+
+# class WorkOrder
+
+
+class WorkOrderDBConsolidator():
+    
+    def __init__(self) -> None:
+        self.dbAccessServiceInstance: DatabaseAcessInterface = PGDBAcessService()
+        print("started consolidating...")
+
+    def callDB(self, *CalListTupple):
+
+        searchTablesList = []
+        print(CalListTupple)
+        for item in CalListTupple:
+
+            command,args = item
+            searchTablesList.append((command, args))
+
+        data = self.dbAccessServiceInstance.dbReadRecordMultiple(searchTablesList)
+        return data
+
+
+
+
 
     # def getUserAuthByEmail(self, emailId):
     #     searchQuery = f"SELECT * FROM userdata WHERE email = '{emailId}'"
@@ -188,7 +299,12 @@ class WorkOrdersDbLink(WorkOrdersDbLinkInterface):
 # print(maketable.getAllWorkOrders())
 
 
-__all__ = ['WorkOrdersDbLink','WorkOrdersDbLinkInterface', 'WorkOrderListDataDBStructure', 'WorkOrderListDataStructure']
+
+
+__all__ = ['WorkOrdersDbLink','WorkOrdersDbLinkInterface', 'WorkOrderListDataDBStructure', 
+           'WorkOrderListDataStructure', 'WorkOrderDBConsolidator', 'WorkOrderDetailDBStructure',
+           'WorkOrderDetailsDBLinkService', 
+           ]
 
 
 

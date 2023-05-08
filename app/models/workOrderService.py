@@ -1,6 +1,7 @@
 #Work order service.py
 from models.workOrdersDbLinkService import *
 from abc import ABC, abstractmethod
+import json
 
 ########################## Work order master interface -> two services ########################
 class WorkOrderServiceInterface(ABC):
@@ -14,7 +15,7 @@ class WorkOrderServiceInterface(ABC):
             pass
 
         @abstractmethod
-        def getWorkOrderById(self, woid:int):
+        def getWorkOrderDetailById(self, woid:int):
             pass
                
         # def menuAdd(self):
@@ -34,6 +35,7 @@ class WorkOrderService(WorkOrderServiceInterface):
     
     def __init__(self) -> None:
         self.WorkOrderDBInstance:WorkOrdersDbLinkInterface = WorkOrdersDbLink()
+        self.WorkOrderDetailDBInstance = WorkOrderDetailsDBLinkService()
 
     def getAllWorkOrders(self):
         return self.WorkOrderDBInstance.getAllWorkOrders()
@@ -52,11 +54,41 @@ class WorkOrderService(WorkOrderServiceInterface):
                  request.form[f'{i}.quantity'], 
                  request.form[f'{i}.duedate'])
             self.WorkOrderDBInstance.addWorkOrder(newWorkOrder)
+
+            WOdetail:WorkOrderDetailDBStructure = WorkOrderDetailDBStructure(wonumber=request.form[f'{i}.name'])
+            self.WorkOrderDetailDBInstance.addWorkOrderDetail(WOdetail)
+
             i+=1
+            
         return True
     
-    def getWorkOrderById(self, woid:int):
-        return self.WorkOrderDBInstance.getWorkOrderById(woid)
+    def getWorkOrderDetailById(self, woid:int):
+        
+        woHeader = WorkOrderListDataDBStructure(None, woid)
+        woDetail = WorkOrderDetailDBStructure(wonumber=woid)
+        #woHistory = 
+        #woDocuments = 
+
+        #get command/ags for getgetWorkOrderHeaderById 
+        #get command/args for WOstatusbyId
+        #get command/args for WOcommdn
+        #get command/args for WOfile
+
+        #call WorkOrderDBInstance.getall(woid)
+        woDetailService = WorkOrderDetailsDBLinkService()
+        consolidate = WorkOrderDBConsolidator()
+        data = consolidate.callDB(self.WorkOrderDBInstance.getWorkOrderHeaderByIdTest(woHeader), woDetailService.getWorkOrderDetailById(woDetail))
+    
+
+        woHeaderDict = self.WorkOrderDBInstance.convertToDict(data[0], woHeader)
+        woDetailDict = self.WorkOrderDBInstance.convertToDict(data[1], woDetail)
+
+        workOrderData = {'header':woHeaderDict, 'detail':woDetailDict}
+        print(workOrderData)
+        workOrderJson = json.dumps(workOrderData)
+        print(workOrderJson)
+        
+        return workOrderJson
     
     # def getMenuItem(self, menuId):
     #     searchById = 'id'

@@ -53,6 +53,50 @@
   </div>
 
 
+
+  <h2> Work Order status</h2>
+
+  <div id = "woStatusSwitches">
+
+
+    <div class="form-check form-check-inline" >
+      <input class="form-check-input" type="checkbox" id="inlineCheckboxFirmed" value="option1">
+      <label class="form-check-label" for="inlineCheckbox1">Order Firmed</label>
+    </div>
+
+    <div class="form-check form-check-inline" >
+      <input class="form-check-input" type="checkbox" id="inlineCheckboxDisassembled" value="option2">
+      <label class="form-check-label" for="inlineCheckbox2">Disassembled</label>
+    </div>
+
+    <div class="form-check form-check-inline" >
+      <input class="form-check-input" type="checkbox" id="inlineCheckboxReceived" value="option1">
+      <label class="form-check-label" for="inlineCheckbox1">Order Received</label>
+    </div>
+
+    <div class="form-check form-check-inline" >
+      <input class="form-check-input" type="checkbox" id="inlineCheckboxReassembled" value="option1">
+      <label class="form-check-label" for="inlineCheckbox1">Order Reassembled</label>
+    </div>
+
+    <div class="form-check form-check-inline" >
+      <input class="form-check-input" type="checkbox" id="inlineCheckboxRework" value="option1">
+      <label class="form-check-label" for="inlineCheckbox1">Order Rework</label>
+    </div>
+
+    <div class="form-check form-check-inline" >
+      <input class="form-check-input" type="checkbox" id="inlineCheckboxClosed" value="option1">
+      <label class="form-check-label" for="inlineCheckbox1">Order Closed</label>
+    </div>
+   
+    </div>
+
+    <div>
+      <h2>History</h2>
+
+    </div>
+
+
   <div class="mb-3" style="margin: 10px; background-color: white;">
     <label for="formFile" class="form-label">Upload Work Order Pick Slip</label>
     <input class="form-control" type="file" id="formFile">
@@ -61,6 +105,14 @@
     <label for="formFile" class="form-label">Upload Work Order Traveler</label>
     <input class="form-control" type="file" id="formFile">
   </div>
+
+
+
+
+
+
+
+
   
 </form>
 
@@ -97,10 +149,8 @@ function createInputElementInRow(row, valueInput = "", name) {
 
 fetch('/api/workorder/{{ idnumber }}')
   .then(response => response.json())
-  .then(data => {
-    console.log(data);
-    console.log(data.length);
-    const workorder = data.map(data => JSON.parse(data));
+  .then(workorder => {
+    console.log(workorder);
 
     [...document.getElementsByClassName("spinner-border")].forEach(element => {
       element.remove()
@@ -108,9 +158,8 @@ fetch('/api/workorder/{{ idnumber }}')
 
     let woTable = document.getElementById("tableWorkOrder.{{idnumber}}.Body");
     
-    for (let i = 0; i < data.length; i++) {
+    for (let i = 0; i < workorder.header.length; i++) {
         let row = woTable.insertRow();
-        console.log(data[i])
 
         // let cell0 = row.insertCell();
         // let tickbox = document.createElement("input")
@@ -118,13 +167,13 @@ fetch('/api/workorder/{{ idnumber }}')
         // tickbox.name = workorder[i].wonumber + ".selected";
         // cell0.appendChild(tickbox)
         
-        let wonumber = createInputElementInRow(row, workorder[i].wonumber, workorder[i].id +".wonumber")
-        let itemnumber = createInputElementInRow(row, workorder[i].itemnumber, workorder[i].id +".itemnumber")
-        let itemdescription = createInputElementInRow(row, workorder[i].itemdescription, workorder[i].id +".itemdescription")
-        let quantity = createInputElementInRow(row, workorder[i].quantity, workorder[i].id +".quantity")
-        let project = createInputElementInRow(row, workorder[i].project, workorder[i].id +".project")
-        let duedate = createInputElementInRow(row, workorder[i].duedate, workorder[i].id +".duedate")
-        let woid = createInputHiddenInRow(row, workorder[i].id, workorder[i].id + ".id")
+        let wonumber = createInputElementInRow(row, workorder.header[i].wonumber, workorder.header[i].id +".wonumber")
+        let itemnumber = createInputElementInRow(row, workorder.header[i].itemnumber, workorder.header[i].id +".itemnumber")
+        let itemdescription = createInputElementInRow(row, workorder.header[i].itemdescription, workorder.header[i].id +".itemdescription")
+        let quantity = createInputElementInRow(row, workorder.header[i].quantity, workorder.header[i].id +".quantity")
+        let project = createInputElementInRow(row, workorder.header[i].project, workorder.header[i].id +".project")
+        let duedate = createInputElementInRow(row, workorder.header[i].duedate, workorder.header[i].id +".duedate")
+        let woid = createInputHiddenInRow(row, workorder.header[i].id, workorder.header[i].id + ".id")
 
       }
     }
