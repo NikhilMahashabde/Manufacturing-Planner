@@ -1,4 +1,9 @@
 
+To do
+
+Dash board entry site
+work order notes
+work orders statues
 
 # Project 2 manufac alpha static site
 

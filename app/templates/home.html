@@ -1,0 +1,94 @@
+{% extends "index.html" %}
+
+{% block title %} 
+
+<a href="/"> Home</a> 
+
+{% endblock %}
+{% block tabletitle %} Home {% endblock %}
+
+{% block main %}
+
+<div class="container">
+    <div class="row row-cols-auto">
+        <div class="col">
+            <div class="card" style="width: 18rem;">
+                <img src="https://dxc.com/au/en/industries/manufacturing/_jcr_content/root/container/enhancedtextimagevid/parsys/image.coreimg.90.768.jpeg/1632354940045/robots-assembly-line-adobestock-101709371.jpeg" class="card-img-top" alt="...">
+                <div class="card-body">
+                <h5 class="card-title">Work Orders</h5>
+                <p class="card-text">Catalogue of all work orders for MFG INL division</p>
+                </div>
+                <ul class="list-group list-group-flush">
+                <li class="list-group-item">WO by project</li>
+                <li class="list-group-item">WO by quantity</li>
+                <li class="list-group-item">WO by MFG hours</li>
+                </ul>
+                <div class="card-body">
+                <a href="/workorders" class="btn btn-primary">All WOs</a>
+                <a href="/forms/workorder/add" class="btn btn-primary">Add Work orders</a>
+                
+                </div>
+            </div>
+        </div>
+        <div class="col">
+
+            <div class="card" style="width: 18rem;">
+                <img src="..." class="card-img-top" alt="...">
+                <div class="card-body">
+                <h5 class="card-title">User Set up</h5>
+                <p class="card-text">Administrator User set up menu - Account information, priveledges, reset account etc</p>
+                </div>
+                <ul class="list-group list-group-flush">
+                <li class="list-group-item">Reset details</li>
+                <li class="list-group-item">Change Priviledges</li>
+                <li class="list-group-item">Update Users. </li>
+                </ul>
+                <div class="card-body">
+                <a href="/forms/userAuth/update" class="btn btn-primary">Update</a>
+                <a href="/forms/user/add" class="btn btn-primary">Add User</a>  
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card" style="width: 18rem;">
+                <img src="..." class="card-img-top" alt="...">
+                <div class="card-body">
+                  <h5 class="card-title">Tasks</h5>
+                  <p class="card-text">TBA</p>
+                </div>
+                <ul class="list-group list-group-flush">
+                  <li class="list-group-item">Messages</li>
+                  <li class="list-group-item">Overdue Wos</li>
+                  <li class="list-group-item">TBA</li>
+                </ul>
+                <div class="card-body">
+                  <a href="#" class="card-link">TBA</a>
+                  <a href="#" class="card-link">TBAk</a>
+                </div>
+              </div>
+
+        </div>
+
+
+    </div>
+  </div>
+
+
+
+<!-- Work orders card -->
+
+  <!-- User update module card -->
+
+
+
+  
+<!-- Dashboard and alerts -->
+  
+
+
+{% endblock %}
+
+{% block jsscripts %}
+
+
+{% endblock %}

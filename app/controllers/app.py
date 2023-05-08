@@ -24,15 +24,16 @@ def launch():
 
 @app.context_processor
 def templateData():
+    print(request.path)
     appData = dict(
         session = session.get("user_id", ""),
         userAuthData = UserAuthService().getUserAuthData(session) if session.get("user_id", "") else "",
+        
     )
     return appData
-########################################################################### public routes
+##### public routes ###################public routes ######################## public routes ########################### public routes ############
 
-
-####################################### LOGIN ###################################
+#### LOGIN ########################## #####
 @app.route("/login")
 def routeLogin():
     return (render_template('login.html') if not session.get("user_id", "") else redirect(url_for('routeLanding')))
@@ -40,8 +41,13 @@ def routeLogin():
 @app.route("/login", methods=["POST"])
 def routeCheckLogin():
     return (redirect (url_for('routeLanding')) if (g.userAuth.checkLogin(request, session)) else redirect(url_for('routeLogin')))
-##########################################################################
 
+@app.route("/logout")
+def routeLogout():
+    session.pop('user_id', None)
+    return redirect(url_for("routeLogin"))
+
+#### FILLER ROUTES ###############################
 @app.route("/about")
 def routeAbout():
     return render_template('about.html')
@@ -50,18 +56,12 @@ def routeAbout():
 def routeContact():
     return render_template('contact.html')
 
-@app.route("/logout")
-def routeLogout():
-    session.pop('user_id', None)
-    return redirect(url_for("routeLogin"))
 
-
-####################### REGISTER ###########################################
+#### REGISTRATION ROUTES ###############################
 
 @app.route("/forms/user/add")
 def routeAddUserAuthForm():
     return render_template('addUser.html')
-
 
 @app.route("/api/user/add", methods=['POST'])
 def routeApiAddUserAuth():
@@ -71,74 +71,25 @@ def routeApiAddUserAuth():
     else:
         return redirect(url_for('routeAddUserAuthForm'))
     
-######################################### private routes
+########## public routes ###################public routes ######################## public routes ########################### public routes ############
 
+################ Dashboard ############
 @app.route("/")
 def routeLanding():
+
+    ##### DASHBOARD TO GO HERE
+
     # return (render_template(url_for('routeLogin')) if not session.get("user_id", "") else redirect(url_for('routeMenu')))
     # connection = psycopg2.connect(host=os.getenv("PGHOST"), user=os.getenv("PGUSER"), password=os.getenv("PGPASSWORD"), port=os.getenv("PGPORT"), dbname=os.getenv("PGDATABASE"))
+    return render_template('home.html')
+
+
+################ Work order main page ############
+
+@app.route("/workorders")
+def routeWorkOrders():
+ 
     return render_template('workorders.html')
-
-# work orders page real api data fetching
-
-# @app.route("/workorders/all")
-# def routeWorkOrdersAll():
-#     return render_template('workordersAll.html')
-
-@app.route("/workorder/<int:idnumber>")
-def workOrderDetail(idnumber:int):
-    return render_template('workorderdetail.html', idnumber = idnumber )
-
-############## REAL API ################################################################
-############## REAL API ################################################################
-############## REAL API ################################################################
-
-@app.route("/api/workorders/all")
-def apiWorkOrdersAll():
-    return g.workOrders.getAllWorkOrders()
-
-@app.route("/api/workorder/<int:woid>")
-def apiGetWorkOrderById(woid:int):
-    return g.workOrders.getWorkOrderById(woid)
-
-
-@app.route("/workorder/<int:woid>/edit", methods=['POST'])
-def apiRouteWorkOrderById(woid:int):
-    print(request.form)
-
-    #check if delete was seelected
-    for (key,value) in list(request.form.items()):
-        if value == "delete":
-            g.workOrders.workOrderDelete(request, woid)
-            return redirect(url_for('routeLanding'))
-   
-    return render_template('workorderdetailedit.html', idnumber = woid )
-
-@app.route("/api/workorder/<int:woid>/process", methods=['POST'])
-def apiRouteWorkOrderEditById(woid:int):
-    print(request.form)
-    for (key,value) in list(request.form.items()):
-        if value == "delete":
-            g.workOrders.workOrderDelete(request, woid)
-            return redirect(url_for('routeLanding'))
-
-    #proces WO update
-    g.workOrders.updateWorkOrder(request)
-    return redirect(f"/workorder/{woid}")
-
-
-
-################################################################
-# work orders page real api data fetching
-
-@app.route("/forms/workorder/add")
-def routeWorkOrderAddForm():
-    return render_template('addWorkOrder.html')
-
-@app.route("/api/workorder/add", methods=['POST'])
-def routeWorkOrderAddApi():
-    g.workOrders.workOrderAdd(request)
-    return redirect(url_for('routeLanding'))
 
 @app.route("/api/workorders/process", methods=['POST', 'GET'])
 def routeWorkOrderDeleteSelectedApi():
@@ -147,21 +98,56 @@ def routeWorkOrderDeleteSelectedApi():
             g.workOrders.workOrderDelete(request)
             print(request.form)
         # g.workOrders.workOrderDelete(request)
-    return redirect(url_for('routeLanding'))
+    return redirect(url_for('routeWorkOrders'))
+
+
+################ Work order detail page ############
+
+@app.route("/workorder/<int:idnumber>")
+def workOrderDetail(idnumber:int):
+    return render_template('workorderdetail.html', idnumber = idnumber )
+
+# CRETAE WORK ORDER
+@app.route("/forms/workorder/add")
+def routeWorkOrderAddForm():
+    return render_template('addWorkOrder.html')
+
+@app.route("/api/workorder/add", methods=['POST'])
+def routeWorkOrderAddApi():
+    g.workOrders.workOrderAdd(request)
+    return redirect(url_for('routeWorkOrders'))
+
+# EDIT WORK ORDERS
+@app.route("/workorder/<int:woid>/edit", methods=['POST'])
+def apiRouteWorkOrderById(woid:int):
+    print(request.form)
+
+    #check if delete was seelected
+    for (key,value) in list(request.form.items()):
+        if value == "delete":
+            g.workOrders.workOrderDelete(request, woid)
+            return redirect(url_for('routeWorkOrders'))
+   
+    return render_template('workorderdetailedit.html', idnumber = woid )
+
+# EDIT WORK ORDER - UPDATE OR DELETE
+@app.route("/api/workorder/<int:woid>/process", methods=['POST'])
+def apiRouteWorkOrderEditById(woid:int):
+    print(request.form)
+    for (key,value) in list(request.form.items()):
+        if value == "delete":
+            g.workOrders.workOrderDelete(request, woid)
+            return redirect(url_for('routeWorkOrders'))
+
+    g.workOrders.updateWorkOrder(request)
+    return redirect(f"/workorder/{woid}")
 
 ######################################### admin routes #########################################################################
 
-############## REAL API ##########
+######## admin panel #####################
 @app.route("/forms/userAuth/update")
 def routeUpdateUserAuthForm():
     return render_template('updateUsers.html')
-
-############## REAL API ###################################################################
-@app.route("/api/userAuth/allusers")
-def routeApiUserAuthAllUsers():
-    return g.userAuth.getAllUserAuthData()
-############## REAL API ###################################################################
-
 
 @app.route("/api/userAuth/update", methods=['POST'])
 def routeUpdateUserAuthApi():
@@ -172,7 +158,23 @@ def routeUpdateUserAuthApi():
 def routeDeleteUserAuthApi():
     g.userAuth.deleteUserAuthData(request)
     return  redirect(url_for('routeUpdateUserAuthForm'))
-    
+
+########## API ################### API ######################## API ########################## API ###########
+
+
+@app.route("/api/workorders/all")
+def apiWorkOrdersAll():
+    return g.workOrders.getAllWorkOrders()
+
+@app.route("/api/workorder/<int:woid>")
+def apiGetWorkOrderById(woid:int):
+    return g.workOrders.getWorkOrderById(woid)
+
+@app.route("/api/userAuth/allusers")
+def routeApiUserAuthAllUsers():
+    return g.userAuth.getAllUserAuthData()
+
+   
 # @app.route('/')
 # def index():
 #     # connection = psycopg2.connect(host=os.getenv("PGHOST"), user=os.getenv("PGUSER"), password=os.getenv("PGPASSWORD"), port=os.getenv("PGPORT"), dbname=os.getenv("PGDATABASE"))

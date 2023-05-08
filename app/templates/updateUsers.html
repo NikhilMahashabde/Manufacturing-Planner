@@ -4,6 +4,13 @@
 
 {% block main %}
 
+{% block title %} 
+<a href="/"> Home</a> 
+ / 
+<a href="/forms/userAuth/update"> Update Users</a> 
+
+{% endblock %}
+
 <form method="POST" action="/api/userAuth/update">
 
   <table class="table">
