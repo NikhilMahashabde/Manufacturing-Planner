@@ -2,8 +2,9 @@
 from abc import ABC, abstractmethod
 from models.dbAcessService import * 
 import json
+import datetime
 
-#when adding to DB
+####################### WorkOrderListDataStructure #################################
 class WorkOrderListDataStructure():
     def __init__(self, wonumber:int = None, itemnumber:str = None, itemdescription:str = None, project:str = None, quantity:int = None, duedate:str = None) -> None:
         self.wonumber: int = wonumber
@@ -38,6 +39,32 @@ class WorkOrderDetailDBStructure():
         self.closed:bool = closed
         self.wonumber = wonumber
 
+class WorkOrderHistoryDBStructure():
+    def __init__(self, id= None, wonumber:str = None, time:str = None, signature:str = None, message:str=None) -> None:
+       self.id = id
+       self.wonumber = wonumber
+       self.time = datetime.datetime.now()
+       self.signature = signature
+       self.message = message
+
+    def stampTime(self):
+        self.time = datetime.datetime.now()
+
+
+class WorkOrderFilesDBStructure():
+    def __init__(self, id= None, wonumber:str = None, wotraveller:bytes = None, wopickslip: bytes = None) -> None:
+       self.id = id
+       self.wonumber = wonumber
+       self.wotraveller = wotraveller
+       self.wopickslip = wopickslip
+
+    def getWoTraveller(self):
+        return self.wotraveller
+
+
+# insert_query = sql.SQL("INSERT INTO your_table (file_column) VALUES (%s);")
+#     cur.execute(insert_query, [psycopg2.Binary(file_data)])
+#     conn.commit()
           
 #usser database interface -> calls on db access instance. 
 class WorkOrdersDbLinkInterface(ABC):
@@ -77,33 +104,16 @@ class WorkOrdersDbLinkInterface(ABC):
     def convertToJson(self, dataInput, className):
         None
 
-    
-        
+  
 
 class WorkOrdersDbLink(WorkOrdersDbLinkInterface):
     def __init__(self) -> None:
         self.dbAccessServiceInstance: DatabaseAcessInterface = PGDBAcessService()
         self.tableName = 'workorders'
         
-
-    def createWorkOrdersTable(self):
-        command = f"""
-                    CREATE TABLE {self.tableName} (
-                        id SERIAL PRIMARY KEY,
-                        wonumber INT NOT NULL,
-                        itemnumber TEXT NOT NULL,
-                        itemdescription TEXT NOT NULL,
-                        project TEXT NOT NULL,
-                        quantity INT NOT NULL, 
-                        duedate TEXT NOT NULL
-                    );"""
-        self.dbAccessServiceInstance.dbCreateTable(command)
-        return True    
-  
     def addWorkOrder(self, data:WorkOrderListDataStructure):
 
         dataDict = vars(data)
-
         command = f""" 
                     INSERT INTO {self.tableName} 
                     ({", ".join(dataDict.keys())})
@@ -183,7 +193,6 @@ class WorkOrdersDbLink(WorkOrdersDbLinkInterface):
 
         self.dbAccessServiceInstance.dbUpdateRecord(commandList, argsList)
 
-
     def getWorkOrderHeaderByIdTest(self, header:WorkOrderListDataDBStructure):
     
             woid = header.wonumber
@@ -196,7 +205,8 @@ class WorkOrdersDbLink(WorkOrdersDbLinkInterface):
     #     return (command, args)
          
 
-# ORM objects 
+############################################################################################################ ORM objects 
+##### WORK ORDER DEATIL ############
 class WorkOrderDetailsDBLinkService():
     def __init__(self) -> None:
         self.tableName = 'workorderdetail'
@@ -216,6 +226,21 @@ class WorkOrderDetailsDBLinkService():
         args = tuple(dataDict.values())
         self.dbAccessServiceInstance.dbCreateRecord(command, args)
         return True
+
+    ######## RETURN Tupple
+    def addWorkOrderDetailTupple(self, data:WorkOrderDetailDBStructure):
+
+        dataDict = vars(data)
+        dataDict.pop("id")
+        print(dataDict)
+        command = f""" 
+                    INSERT INTO {self.tableName} 
+                    ({", ".join(dataDict.keys())})
+                    VALUES 
+                    ({", ".join(["%s"] * len(dataDict))})
+                    """
+        args = tuple(dataDict.values())
+        return (command, args)
     
     def getWorkOrderDetailById(self, detail:WorkOrderDetailDBStructure):
 
@@ -224,20 +249,75 @@ class WorkOrderDetailsDBLinkService():
         args = (woid,)
         return (command, args)
     
+############################################################################################################ ORM objects 
+class WorkOrderHistoryDBLinkService():
+    def __init__(self) -> None:
+        self.tableName = 'workorderhistory'
+        self.dbAccessServiceInstance: DatabaseAcessInterface = PGDBAcessService()
+    
+    def addHistoryItem(self, data:WorkOrderHistoryDBStructure):
+        
+        dataDict = vars(data)
+        dataDict.pop("id")
+        print(dataDict)
+        command = f""" 
+                    INSERT INTO {self.tableName} 
+                    ({", ".join(dataDict.keys())})
+                    VALUES 
+                    ({", ".join(["%s"] * len(dataDict))})
+                    """
+        args = tuple(dataDict.values())
+        # self.dbAccessServiceInstance.dbCreateRecord(command, args)
+        return (command, args)
 
-        # woList = self.convertToJson(workorderData)
-        # #print(woList)
-        # return woList
+    def getWorkOrderHistoryById(self, detail:WorkOrderDetailDBStructure):
+
+        woid = detail.wonumber
+        command = f"""SELECT * FROM {self.tableName} WHERE wonumber = %s"""
+        args = (woid,)
+        return (command, args)
     
 
 
-# ORM objects 
-# class WorkOrderHistoryDBLinkService():
+############################################################################################################ ORM objects 
+######### DOCUMENT OBJECT ###############
+class WorkOrderFilesDBLinkService():
+    def __init__(self) -> None:
+        self.tableName = 'workorderfiles'
+        self.dbAccessServiceInstance: DatabaseAcessInterface = PGDBAcessService()
+    
+    def addfilesItem(self, data:WorkOrderFilesDBStructure):
+        
+        dataDict = vars(data)
+        dataDict.pop("id")
+        print(dataDict)
+        command = f""" 
+                    INSERT INTO {self.tableName} 
+                    ({", ".join(dataDict.keys())})
+                    VALUES 
+                    ({", ".join(["%s"] * len(dataDict))})
+                    """
+        args = tuple(dataDict.values())
+        # self.dbAccessServiceInstance.dbCreateRecord(command, args)
+        return (command, args)
 
-# # ORM objects 
-# class WorkOrderHistoryDBLinkService():
+    def getWorkOrderFilesById(self, detail:WorkOrderDetailDBStructure):
 
-# class WorkOrder
+        woid = detail.wonumber
+        command = f"""SELECT * FROM {self.tableName} WHERE wonumber = %s"""
+        args = (woid,)
+        return (command, args)
+    
+
+
+
+
+
+
+##############################################################################################################
+
+
+
 
 
 class WorkOrderDBConsolidator():
@@ -246,7 +326,7 @@ class WorkOrderDBConsolidator():
         self.dbAccessServiceInstance: DatabaseAcessInterface = PGDBAcessService()
         print("started consolidating...")
 
-    def callDB(self, *CalListTupple):
+    def readDB(self, *CalListTupple):
 
         searchTablesList = []
         print(CalListTupple)
@@ -258,8 +338,14 @@ class WorkOrderDBConsolidator():
         data = self.dbAccessServiceInstance.dbReadRecordMultiple(searchTablesList)
         return data
 
+    def writeDB(self, *setListTupple):
+        executeTablesList = []
+        for item in setListTupple:
+            command,args = item
+            executeTablesList.append((command, args))
 
-
+        self.dbAccessServiceInstance.dbWriteRecordMultiple(executeTablesList)
+        return True
 
 
     # def getUserAuthByEmail(self, emailId):
@@ -299,12 +385,11 @@ class WorkOrderDBConsolidator():
 # print(maketable.getAllWorkOrders())
 
 
-
-
 __all__ = ['WorkOrdersDbLink','WorkOrdersDbLinkInterface', 'WorkOrderListDataDBStructure', 
            'WorkOrderListDataStructure', 'WorkOrderDBConsolidator', 'WorkOrderDetailDBStructure',
-           'WorkOrderDetailsDBLinkService', 
-           ]
+           'WorkOrderDetailsDBLinkService', 'WorkOrderDetailDBStructure', 'WorkOrderFilesDBStructure', 
+           'WorkOrderHistoryDBLinkService', 'WorkOrderHistoryDBStructure', 'WorkOrderFilesDBLinkService']
 
 
 
+##

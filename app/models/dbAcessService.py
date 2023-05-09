@@ -38,6 +38,10 @@ class DatabaseAcessInterface(ABC):
     def dbReadRecordMultiple(self, searchQuery):
         pass
 
+    @abs
+    def dbWriteRecordMultiple(self, writeList):
+        pass
+
 ############# Specific implementation for PSQL database - implements standardised methods from interface
 
 class PGDBAcessService(DatabaseAcessInterface):
@@ -50,12 +54,6 @@ class PGDBAcessService(DatabaseAcessInterface):
     def dbClose(self):
         self.connection.close()
 
-    def dbCreateTable(self, command):
-        self.dbConnect()
-        self.cursor.execute(command)
-        self.connection.commit()
-        self.dbClose()
-    
     def dbCreateRecord(self, command, args):
         self.dbConnect()
         self.cursor.execute(command, (args))
@@ -72,10 +70,8 @@ class PGDBAcessService(DatabaseAcessInterface):
 
     def dbUpdateRecord(self, commands, args):
         self.dbConnect()
-
         for command, arg in zip(commands, args):
             self.cursor.execute(command, (arg))
-
         self.connection.commit()
         self.dbClose()
 
@@ -86,28 +82,23 @@ class PGDBAcessService(DatabaseAcessInterface):
         self.connection.commit()
         self.dbClose()
 
-    def dbGeneric(self, command, args):
-        self.dbConnect()
-        self.cursor.execute(command, (args))
-        self.connection.commit()
-        self.dbClose()
-
     def dbReadRecordMultiple(self, searchTablesList):
         self.dbConnect()
-
         data = []
         for command,args in searchTablesList:
             self.cursor.execute(command, args)
             results = self.cursor.fetchall()
             print(results)
             data.append(results)
-
+        self.dbClose()
         return data
 
-
-
-
-
+    def dbWriteRecordMultiple(self, writeTablesList):
+        self.dbConnect()
+        for command,args in writeTablesList:
+            self.cursor.execute(command, args)
+        self.connection.commit()
+        self.dbClose()
         
 __all__ = ['DatabaseAcessInterface','PGDBAcessService']
 

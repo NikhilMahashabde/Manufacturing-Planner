@@ -2,6 +2,7 @@
 from models.workOrdersDbLinkService import *
 from abc import ABC, abstractmethod
 import json
+from flask import session
 
 ########################## Work order master interface -> two services ########################
 class WorkOrderServiceInterface(ABC):
@@ -18,11 +19,6 @@ class WorkOrderServiceInterface(ABC):
         def getWorkOrderDetailById(self, woid:int):
             pass
                
-        # def menuAdd(self):
-        #     pass
-        
-        # def getMenuItem(self):
-        #     pass
         @abstractmethod
         def updateWorkOrder():
             pass
@@ -36,6 +32,9 @@ class WorkOrderService(WorkOrderServiceInterface):
     def __init__(self) -> None:
         self.WorkOrderDBInstance:WorkOrdersDbLinkInterface = WorkOrdersDbLink()
         self.WorkOrderDetailDBInstance = WorkOrderDetailsDBLinkService()
+        self.WorkOrderHistoryDBInstance = WorkOrderHistoryDBLinkService()
+        self.WorkOrderFilesDBInstance = WorkOrderFilesDBLinkService()
+        self.dbConsolidator = WorkOrderDBConsolidator()
 
     def getAllWorkOrders(self):
         return self.WorkOrderDBInstance.getAllWorkOrders()
@@ -53,52 +52,51 @@ class WorkOrderService(WorkOrderServiceInterface):
                  request.form[f'{i}.project'], 
                  request.form[f'{i}.quantity'], 
                  request.form[f'{i}.duedate'])
-            self.WorkOrderDBInstance.addWorkOrder(newWorkOrder)
 
             WOdetail:WorkOrderDetailDBStructure = WorkOrderDetailDBStructure(wonumber=request.form[f'{i}.name'])
-            self.WorkOrderDetailDBInstance.addWorkOrderDetail(WOdetail)
+            WOHistory:WorkOrderHistoryDBStructure = WorkOrderHistoryDBStructure(wonumber=request.form[f'{i}.name'], signature=session.get("signature", "default"))
+            WOFiles: WorkOrderFilesDBStructure = WorkOrderFilesDBStructure(wonumber=request.form[f'{i}.name'])
 
+            self.dbConsolidator.writeDB(newWorkOrder,WOdetail, WOHistory, WOFiles)
+
+            self.WorkOrderDetailDBInstance.addWorkOrderDetail(WOdetail)
+            self.WorkOrderDBInstance.addWorkOrder(newWorkOrder)
             i+=1
             
         return True
     
     def getWorkOrderDetailById(self, woid:int):
         
-        woHeader = WorkOrderListDataDBStructure(None, woid)
+        woDataStack = []
+
+        woHeader = WorkOrderListDataDBStructure(wonumber=woid)
+        woDataStack.append(woHeader)
+
         woDetail = WorkOrderDetailDBStructure(wonumber=woid)
-        #woHistory = 
-        #woDocuments = 
+        woDataStack.append(woDetail)
 
-        #get command/ags for getgetWorkOrderHeaderById 
-        #get command/args for WOstatusbyId
-        #get command/args for WOcommdn
-        #get command/args for WOfile
+        woHistory = WorkOrderHistoryDBStructure(wonumber=woid)
+        woDataStack.append(woHistory)
 
-        #call WorkOrderDBInstance.getall(woid)
-        woDetailService = WorkOrderDetailsDBLinkService()
-        consolidate = WorkOrderDBConsolidator()
-        data = consolidate.callDB(self.WorkOrderDBInstance.getWorkOrderHeaderByIdTest(woHeader), woDetailService.getWorkOrderDetailById(woDetail))
+        woFiles = WorkOrderFilesDBStructure(wonumber=woid)
+        woDataStack.append(woFiles)
+     
+        data = self.dbConsolidator.readDB(self.WorkOrderDBInstance.getWorkOrderHeaderByIdTest(woHeader),
+                                  self.WorkOrderDetailDBInstance.getWorkOrderDetailById(woDetail),
+                                  self.WorkOrderHistoryDBInstance.getWorkOrderHistoryById(woHistory),
+                                  self.WorkOrderFilesDBInstance.getWorkOrderFilesById(woFiles))
     
-
         woHeaderDict = self.WorkOrderDBInstance.convertToDict(data[0], woHeader)
         woDetailDict = self.WorkOrderDBInstance.convertToDict(data[1], woDetail)
+        woHistoryDict = self.WorkOrderDBInstance.convertToDict(data[2], woHistory)
+        woFilesDict = self.WorkOrderDBInstance.convertToDict(data[3], woDetail)
 
-        workOrderData = {'header':woHeaderDict, 'detail':woDetailDict}
+        workOrderData = {'header':woHeaderDict, 'detail':woDetailDict, 'history': woHistoryDict, 'files': woFilesDict}
         print(workOrderData)
         workOrderJson = json.dumps(workOrderData)
         print(workOrderJson)
         
         return workOrderJson
-    
-    # def getMenuItem(self, menuId):
-    #     searchById = 'id'
-    #     result = self.fTdatabaseInstance.searchFoodRecord(searchById, menuId)
-    #     return result
-    
-    # def menuItemEdit(self, request):
-    #     self.newItemEdit:MenuItemStructure =  MenuItemStructure( request.form['name'], request.form['URL'], request.form['price'])
-    #     self.newItemId = request.form['id']
-    #     self.fTdatabaseInstance.updateFoodRecord(self.newItemId, self.newItemEdit)
 
     def workOrderDelete(self, request, wonumber:int = ""):
         
@@ -114,11 +112,6 @@ class WorkOrderService(WorkOrderServiceInterface):
         self.WorkOrderDBInstance.deleteWorkOrderRecords(idList)
             
         return
-        # if 'submitYes' in request.form:
-        #     self.fTdatabaseInstance.deleteFoodRecord(self.newItemId)
-        #     return True
-        # elif 'submitNo' in request.form:
-        #     return False
 
     def updateWorkOrder(self, request):
         

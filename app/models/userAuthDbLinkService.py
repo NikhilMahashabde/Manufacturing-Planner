@@ -27,6 +27,7 @@ class UserAuthDBStructure(UserAuthDataStructure):
     def validateUser(self, emailEntry:str, password:str= None):
         if ((self.email == emailEntry) and bcrypt.checkpw(password.encode(), self.password_hash.encode())):
             session["user_id"] = self.id
+            session["signature"] = self.email
             return True
         return False
 
