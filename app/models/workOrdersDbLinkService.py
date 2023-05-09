@@ -73,10 +73,6 @@ class WorkOrdersDbLinkInterface(ABC):
     def addWorkOrder(data:WorkOrderListDataStructure):
         None
 
-    # @abstractmethod
-    # def getWorkOrderByWONumber():
-    #     None
-
     @abstractmethod
     def getAllWorkOrders():
         None
@@ -92,8 +88,9 @@ class WorkOrdersDbLinkInterface(ABC):
     @abstractmethod
     def updateWOlist():
         None
-    #  def updateWorkOrderByWoNumber():
-    #     None
+
+    def updateWOlistTuple():
+        None
     
     def readWOheader():
         None
@@ -122,8 +119,12 @@ class WorkOrdersDbLink(WorkOrdersDbLinkInterface):
                     """
         
         args = tuple(dataDict.values())
-        self.dbAccessServiceInstance.dbCreateRecord(command, args)
-        return True
+        return (command, args)
+    
+    
+    
+
+
     
     def getAllWorkOrders(self):
         command = f"""SELECT * FROM {self.tableName}"""
@@ -176,22 +177,44 @@ class WorkOrdersDbLink(WorkOrdersDbLinkInterface):
         command = ''
         args = ()
         for item in data:
-            command = """
-                                UPDATE workorders
+            command = f"""
+                                UPDATE {self.tableName}
                                 SET 
-                                wonumber = %s,
                                 itemnumber = %s, 
                                 itemdescription = %s,
                                 quantity = %s,
                                 project = %s,
                                 duedate = %s
-                                WHERE id = %s       
+                                WHERE wonumber = %s       
                             """
-            args = (item.wonumber, item.itemnumber, item.itemdescription, item.quantity, item.project, item.duedate, item.id)
+            args = (item.itemnumber, item.itemdescription, item.quantity, item.project, item.duedate, item.wonumber)
             commandList.append(command)
             argsList.append(args)
 
         self.dbAccessServiceInstance.dbUpdateRecord(commandList, argsList)
+
+
+    def updateWOlistTuple(self, data):
+        print("received data.....", data)
+        commandList = []
+        argsList = []
+        command = ''
+        args = ()
+        for item in data:
+            command = f"""
+                                UPDATE {self.tableName}
+                                SET 
+                                itemnumber = %s, 
+                                itemdescription = %s,
+                                quantity = %s,
+                                project = %s,
+                                duedate = %s
+                                WHERE wonumber = %s       
+                            """
+            args = (item.itemnumber, item.itemdescription, item.quantity, item.project, item.duedate, item.wonumber)
+            commandList.append(command)
+            argsList.append(args)
+        return (commandList, argsList)
 
     def getWorkOrderHeaderByIdTest(self, header:WorkOrderListDataDBStructure):
     
@@ -249,6 +272,29 @@ class WorkOrderDetailsDBLinkService():
         args = (woid,)
         return (command, args)
     
+    def updateWOdetail(self, data):
+        print("received data.....", data)
+        commandList = []
+        argsList = []
+        command = ''
+        args = ()
+        for item in data:
+            command = f"""
+                                UPDATE {self.tableName}
+                                SET 
+                                firmed = %s, 
+                                disassembled = %s,
+                                received = %s,
+                                reassembled = %s,
+                                rework = %s, 
+                                closed = %s
+                                WHERE wonumber = %s       
+                            """
+            args = (item.firmed, item.disassembled, item.received, item.reassembled, item.rework, item.closed, item.wonumber )
+            commandList.append(command)
+            argsList.append(args)
+        return (commandList, argsList)
+    
 ############################################################################################################ ORM objects 
 class WorkOrderHistoryDBLinkService():
     def __init__(self) -> None:
@@ -290,7 +336,6 @@ class WorkOrderFilesDBLinkService():
         
         dataDict = vars(data)
         dataDict.pop("id")
-        print(dataDict)
         command = f""" 
                     INSERT INTO {self.tableName} 
                     ({", ".join(dataDict.keys())})
@@ -324,12 +369,12 @@ class WorkOrderDBConsolidator():
     
     def __init__(self) -> None:
         self.dbAccessServiceInstance: DatabaseAcessInterface = PGDBAcessService()
-        print("started consolidating...")
+        #print("started consolidating...")
 
     def readDB(self, *CalListTupple):
 
         searchTablesList = []
-        print(CalListTupple)
+       # print(CalListTupple)
         for item in CalListTupple:
 
             command,args = item
@@ -340,12 +385,20 @@ class WorkOrderDBConsolidator():
 
     def writeDB(self, *setListTupple):
         executeTablesList = []
+       
         for item in setListTupple:
+
             command,args = item
+            print(command, args)
             executeTablesList.append((command, args))
 
         self.dbAccessServiceInstance.dbWriteRecordMultiple(executeTablesList)
         return True
+    
+    def updateDBzip(self, commands, args):
+        self.dbAccessServiceInstance.dbUpdateRecord(commands, args)
+
+
 
 
     # def getUserAuthByEmail(self, emailId):

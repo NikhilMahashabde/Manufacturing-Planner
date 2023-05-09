@@ -133,13 +133,13 @@ def apiRouteWorkOrderById(woid:int):
 # EDIT WORK ORDER - UPDATE OR DELETE
 @app.route("/api/workorder/<int:woid>/process", methods=['POST'])
 def apiRouteWorkOrderEditById(woid:int):
-    print(request.form)
     for (key,value) in list(request.form.items()):
         if value == "delete":
             g.workOrders.workOrderDelete(request, woid)
             return redirect(url_for('routeWorkOrders'))
 
-    g.workOrders.updateWorkOrder(request)
+    g.workOrders.updateWorkOrder(request, woid)
+
     return redirect(f"/workorder/{woid}")
 
 ######################################### admin routes #########################################################################

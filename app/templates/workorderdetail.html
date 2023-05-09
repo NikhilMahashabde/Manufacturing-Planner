@@ -58,27 +58,27 @@
       <label class="form-check-label" for="inlineCheckbox1">Order Firmed</label>
     </div>
 
-    <div class="form-check form-check-inline" disabled>
+    <div class="form-check form-check-inline" readonly>
       <input class="form-check-input" type="checkbox" id="inlineCheckboxDisassembled" value="option2" disabled>
       <label class="form-check-label" for="inlineCheckbox2">Disassembled</label>
     </div>
 
-    <div class="form-check form-check-inline" disabled>
+    <div class="form-check form-check-inline" readonly>
       <input class="form-check-input" type="checkbox" id="inlineCheckboxReceived" value="option1" disabled>
       <label class="form-check-label" for="inlineCheckbox1">Order Received</label>
     </div>
 
-    <div class="form-check form-check-inline" disabled>
+    <div class="form-check form-check-inline" readonly>
       <input class="form-check-input" type="checkbox" id="inlineCheckboxReassembled" value="option1" disabled>
       <label class="form-check-label" for="inlineCheckbox1">Order Reassembled</label>
     </div>
 
-    <div class="form-check form-check-inline" disabled>
+    <div class="form-check form-check-inline" readonly>
       <input class="form-check-input" type="checkbox" id="inlineCheckboxRework" value="option1" disabled>
       <label class="form-check-label" for="inlineCheckbox1">Order Rework</label>
     </div>
 
-    <div class="form-check form-check-inline" disabled>
+    <div class="form-check form-check-inline" readonly>
       <input class="form-check-input" type="checkbox" id="inlineCheckboxClosed" value="option1" disabled>
       <label class="form-check-label" for="inlineCheckbox1">Order Closed</label>
     </div>
@@ -88,7 +88,29 @@
     <div>
       <h2>History</h2>
 
+      <div>
+         <div id="historyContainer">
+  
+            <table class="table" id = "workorder.{{ idnumber }}.table.history" style="margin: 10px; background-color: white;">
+              <thead>
+                <tr>
+                  <th scope="Time">Time</th>
+                  <th scope="signature">User</th>
+                  <th scope="Itemdescription">Message</th>
+                </tr>
+              </thead>
+              <tbody id="tableHistory">
+        
+              </tbody>
+            </table>
+  
+          </div>
+  
+      </div>
+
     </div>
+
+
 
 
 
@@ -107,11 +129,6 @@
 
 {% block jsscripts %}
 <script>
-
-
-
-    
-
 
   fetch('/api/workorder/{{ idnumber }}')
     .then(response => response.json())
@@ -158,31 +175,60 @@
             firmedBox.setAttribute("checked","")
           }
 
-          let disassembledBox = document.getElementById("inlineCheckboxFirmed")
+          let disassembledBox = document.getElementById("inlineCheckboxDisassembled")
           if (data.detail[i].disassembled){
             disassembledBox.setAttribute("checked","")
           }
 
-          let receivedBox = document.getElementById("inlineCheckboxFirmed")
+          let receivedBox = document.getElementById("inlineCheckboxReceived")
           if (data.detail[i].received){
             receivedBox.setAttribute("checked","")
           }
 
-          let reassembledBox = document.getElementById("inlineCheckboxFirmed")
+          let reassembledBox = document.getElementById("inlineCheckboxReassembled")
           if (data.detail[i].firmed){
             reassembledBox.setAttribute("checked","")
           }
 
-          let reworkBox = document.getElementById("inlineCheckboxFirmed")
+          let reworkBox = document.getElementById("inlineCheckboxRework")
           if (data.detail[i].rework){
             reworkBox.setAttribute("checked","")
           }
 
-          let closedBox = document.getElementById("inlineCheckboxFirmed")
+          let closedBox = document.getElementById("inlineCheckboxClosed")
           if (data.detail[i].closed){
             closedBox.setAttribute("checked","")
           }
           
+
+          historyContainer = document.getElementById("tableHistory")
+          
+
+          for (item in data.history){
+            console.log(item)
+            let row1 = historyContainer.insertRow();
+
+            let cellTime = row1.insertCell();
+            let cellTimeText = document.createElement("p")
+            cellTimeText.textContent = data.history[item].time
+            cellTime.appendChild(cellTimeText)
+
+            let cellSig = row1.insertCell();
+            let cellSigText = document.createElement("p")
+            cellSigText.textContent = data.history[item].signature
+            cellSig.appendChild(cellSigText)
+
+            let cellMsg = row1.insertCell();
+            let cellMsgText = document.createElement("p")
+            cellMsgText.textContent = data.history[item].message
+            cellMsg.appendChild(cellMsgText)
+
+          }
+          
+
+
+          
+
 
           
 

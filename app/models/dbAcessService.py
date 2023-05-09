@@ -8,11 +8,6 @@ import os
 ############# Generic interface for database accesss
 class DatabaseAcessInterface(ABC):
 
-    # table methods
-    @abstractmethod
-    def dbCreateTable():
-        pass
-
     #CRUD operations for records
     @abstractmethod
     def dbCreateRecord(command, args):
@@ -31,14 +26,10 @@ class DatabaseAcessInterface(ABC):
         pass
 
     @abstractmethod
-    def dbGeneric():
-        pass
-
-    @abstractmethod
     def dbReadRecordMultiple(self, searchQuery):
         pass
 
-    @abs
+    @abstractmethod    
     def dbWriteRecordMultiple(self, writeList):
         pass
 
@@ -88,17 +79,19 @@ class PGDBAcessService(DatabaseAcessInterface):
         for command,args in searchTablesList:
             self.cursor.execute(command, args)
             results = self.cursor.fetchall()
-            print(results)
             data.append(results)
         self.dbClose()
         return data
 
     def dbWriteRecordMultiple(self, writeTablesList):
+        print(writeTablesList)
         self.dbConnect()
         for command,args in writeTablesList:
             self.cursor.execute(command, args)
         self.connection.commit()
         self.dbClose()
+
+        
         
 __all__ = ['DatabaseAcessInterface','PGDBAcessService']
 

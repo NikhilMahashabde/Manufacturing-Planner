@@ -18,34 +18,32 @@
 <!-- <button onclick="window.location.href='/forms/workorder/add'">Create New Order</button> -->
 <form method="POST" action="/api/workorder/{{idnumber}}/process">
 
-    <div style="margin: 10px; background-color: white;">
-      <button type="submit" name="wo" value="delete">Delete Work Order {{ idnumber }} </button>
-      <button type="submit" name="wo" value="update">Submit Changes</button>
-    </div>
+  <div style="margin: 10px; background-color: white;">
+    <button type="submit" name="wo" value="delete">Delete Work Order {{ idnumber }} </button>
+    <button type="submit" name="wo" value="update">Submit Changes</button>
+  </div>
     
 
-    <div style="margin: 10px; background-color: white;">
+  <div style="margin: 10px; background-color: white;">
 
-      <table class="table" id = "workorder.{{ idnumber }}.table" style="margin: 10px; background-color: white;">
-        <thead>
-          <tr>
-            <th scope="workOrderNumber">Name</th>
-            <th scope="itemNumber">Item Number</th>
-            <th scope="Itemdescription">Item Description</th>
-            <th scope="quantity">Quantity</th>
-            <th scope="project">Project</th>
-            <th scope="duedate">Due Date</th>
-          </tr>
-        </thead>
-        <tbody id="tableWorkOrder.{{ idnumber }}.Body">
-  
-        </tbody>
-      </table>
+    <table class="table" id = "workorder.{{ idnumber }}.table" style="margin: 10px; background-color: white;">
+      <thead>
+        <tr>
+          <th scope="workOrderNumber">Name</th>
+          <th scope="itemNumber">Item Number</th>
+          <th scope="Itemdescription">Item Description</th>
+          <th scope="quantity">Quantity</th>
+          <th scope="project">Project</th>
+          <th scope="duedate">Due Date</th>
+        </tr>
+      </thead>
+      <tbody id="tableWorkOrder.{{ idnumber }}.Body">
 
-    </div>
+      </tbody>
+    </table>
+
+  </div>
    
-
-
   <div class="d-flex justify-content-center" id="loadingSpinner">
     <div class="spinner-border" role="status">
       <span class="visually-hidden">Loading...</span>
@@ -57,44 +55,37 @@
   <h2> Work Order status</h2>
 
   <div id = "woStatusSwitches">
-
-
     <div class="form-check form-check-inline" >
-      <input class="form-check-input" type="checkbox" id="inlineCheckboxFirmed" value="option1">
-      <label class="form-check-label" for="inlineCheckbox1">Order Firmed</label>
+      <input class="form-check-input" type="checkbox" id="inlineCheckboxFirmed" value=True name="firmed">
+      <label class="form-check-label" for="inlineCheckboxFirmed">Order Firmed</label>
     </div>
 
     <div class="form-check form-check-inline" >
-      <input class="form-check-input" type="checkbox" id="inlineCheckboxDisassembled" value="option2">
-      <label class="form-check-label" for="inlineCheckbox2">Disassembled</label>
+      <input class="form-check-input" type="checkbox" id="inlineCheckboxDisassembled" value=True name="disassembled" >
+      <label class="form-check-label" for="inlineCheckboxDisassembled">Disassembled</label>
     </div>
 
     <div class="form-check form-check-inline" >
-      <input class="form-check-input" type="checkbox" id="inlineCheckboxReceived" value="option1">
-      <label class="form-check-label" for="inlineCheckbox1">Order Received</label>
+      <input class="form-check-input" type="checkbox" id="inlineCheckboxReceived" value=True name="received">
+      <label class="form-check-label" for="inlineCheckboxReceived">Order Received</label>
     </div>
 
     <div class="form-check form-check-inline" >
-      <input class="form-check-input" type="checkbox" id="inlineCheckboxReassembled" value="option1">
-      <label class="form-check-label" for="inlineCheckbox1">Order Reassembled</label>
+      <input class="form-check-input" type="checkbox" id="inlineCheckboxReassembled" value=True name="reassembled" >
+      <label class="form-check-label" for="inlineCheckboxReassembled">Order Reassembled</label>
     </div>
 
     <div class="form-check form-check-inline" >
-      <input class="form-check-input" type="checkbox" id="inlineCheckboxRework" value="option1">
-      <label class="form-check-label" for="inlineCheckbox1">Order Rework</label>
+      <input class="form-check-input" type="checkbox" id="inlineCheckboxRework" value=True name="rework">
+      <label class="form-check-label" for="inlineCheckboxRework">Order Rework</label>
     </div>
 
     <div class="form-check form-check-inline" >
-      <input class="form-check-input" type="checkbox" id="inlineCheckboxClosed" value="option1">
-      <label class="form-check-label" for="inlineCheckbox1">Order Closed</label>
+      <input class="form-check-input" type="checkbox" id="inlineCheckboxClosed" value=True name="closed">
+      <label class="form-check-label" for="inlineCheckboxClosed">Order Closed</label>
     </div>
-   
-    </div>
+  </div>
 
-    <div>
-      <h2>History</h2>
-
-    </div>
 
 
   <div class="mb-3" style="margin: 10px; background-color: white;">
@@ -105,13 +96,6 @@
     <label for="formFile" class="form-label">Upload Work Order Traveler</label>
     <input class="form-control" type="file" id="formFile">
   </div>
-
-
-
-
-
-
-
 
   
 </form>
@@ -167,15 +151,52 @@ fetch('/api/workorder/{{ idnumber }}')
         // tickbox.name = workorder[i].wonumber + ".selected";
         // cell0.appendChild(tickbox)
         
-        let wonumber = createInputElementInRow(row, workorder.header[i].wonumber, workorder.header[i].id +".wonumber")
-        let itemnumber = createInputElementInRow(row, workorder.header[i].itemnumber, workorder.header[i].id +".itemnumber")
-        let itemdescription = createInputElementInRow(row, workorder.header[i].itemdescription, workorder.header[i].id +".itemdescription")
-        let quantity = createInputElementInRow(row, workorder.header[i].quantity, workorder.header[i].id +".quantity")
-        let project = createInputElementInRow(row, workorder.header[i].project, workorder.header[i].id +".project")
-        let duedate = createInputElementInRow(row, workorder.header[i].duedate, workorder.header[i].id +".duedate")
-        let woid = createInputHiddenInRow(row, workorder.header[i].id, workorder.header[i].id + ".id")
+        let wonumber = createInputElementInRow(row, workorder.header[i].wonumber, "wonumber")
+        wonumber.setAttribute("readonly", "")
+        let itemnumber = createInputElementInRow(row, workorder.header[i].itemnumber, "itemnumber")
+        let itemdescription = createInputElementInRow(row, workorder.header[i].itemdescription, "itemdescription")
+        let quantity = createInputElementInRow(row, workorder.header[i].quantity, "quantity")
+        let project = createInputElementInRow(row, workorder.header[i].project, "project")
+        let duedate = createInputElementInRow(row, workorder.header[i].duedate, "duedate")
+        let woid = createInputHiddenInRow(row, workorder.header[i].id, "id")
+
+        let firmedBox = document.getElementById("inlineCheckboxFirmed")
+        if (workorder.detail[i].firmed){
+          firmedBox.setAttribute("checked","")
+        }
+
+        let disassembledBox = document.getElementById("inlineCheckboxDisassembled")
+        if (workorder.detail[i].disassembled){
+          disassembledBox.setAttribute("checked","")
+        }
+
+        let receivedBox = document.getElementById("inlineCheckboxReceived")
+        if (workorder.detail[i].received){
+          receivedBox.setAttribute("checked","")
+        }
+
+        let reassembledBox = document.getElementById("inlineCheckboxReassembled")
+        if (workorder.detail[i].firmed){
+          reassembledBox.setAttribute("checked","")
+        }
+
+        let reworkBox = document.getElementById("inlineCheckboxRework")
+        if (workorder.detail[i].rework){
+          reworkBox.setAttribute("checked","")
+        }
+
+        let closedBox = document.getElementById("inlineCheckboxClosed")
+        if (workorder.detail[i].closed){
+          closedBox.setAttribute("checked","")
+        }
+
+
 
       }
+      
+          
+
+
     }
   )
   .catch(error => console.error(error));

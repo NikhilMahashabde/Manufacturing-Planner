@@ -3,3 +3,4 @@ Gunicorn
 psycopg2
 datetime
 bcrypt
+python-dotenv
