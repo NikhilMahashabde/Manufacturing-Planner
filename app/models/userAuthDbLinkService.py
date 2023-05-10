@@ -28,6 +28,7 @@ class UserAuthDBStructure(UserAuthDataStructure):
         if ((self.email == emailEntry) and bcrypt.checkpw(password.encode(), self.password_hash.encode())):
             session["user_id"] = self.id
             session["signature"] = self.email
+            session["isAdmin"] = self.isAdmin
             return True
         return False
 
@@ -72,6 +73,7 @@ class UserAuthDbLink(UserAuthDbLinkInterface):
                     (%s, %s, %s, %s, %s)
                     """
         args = (data.uuid, data.name, data.email, data.isAdmin, data.password_hash)
+        print(command,args)
         self.dbAcessInstance.dbCreateRecord(command, args)
         return True
     

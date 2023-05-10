@@ -1,13 +1,20 @@
 {% extends "index.html" %}
 
-{% block main %}
+{% block tabtitle %} Update Users {% endblock %}
 
 {% block title %} 
-<a href="/"> Home</a> 
- / 
-<a href="/forms/userAuth/update"> Update Users</a> 
+
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/">Home</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Update Users</li>
+  </ol>
+</nav>
 
 {% endblock %}
+
+{% block main %}
+
 
 <form method="POST" action="/api/userAuth/update">
 
@@ -209,7 +216,7 @@
           let inputId = createInputDisabledInRow(row,userlist[i].id, userlist[i].id + ".id")
           let inputUUID = createInputElementInRow(row,userlist[i].uuid, userlist[i].id + ".uuid")     
           let inputName = createInputElementInRow(row,userlist[i].name, userlist[i].id + ".name")    
-          let inputEmail = createInputElementInRow(row,userlist[i].name, userlist[i].id+ ".email")    
+          let inputEmail = createInputElementInRow(row,userlist[i].email, userlist[i].id+ ".email")    
           let inputNewPassword = createInputElementInRow(row,"", userlist[i].id + ".password")    
 
            let inputAdmin = document.createElement("input")

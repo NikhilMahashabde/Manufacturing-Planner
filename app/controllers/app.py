@@ -19,6 +19,7 @@ adminRoutes = ['/forms/userAuth/update', '/api/userAuth/update']
 @app.before_request
 def launch():
     if (request.path not in publicRoutes) and (not session.get("user_id", "")): return redirect(url_for("routeLogin"))
+    if ((request.path in adminRoutes) and (session.get("isAdmin", "") is not True)): return redirect(url_for('routeLanding'))
     g.userAuth:UserAuthInterface = UserAuthService()
     g.workOrders: WorkOrderServiceInterface = WorkOrderService()
 

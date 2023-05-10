@@ -1,17 +1,21 @@
 {% extends "index.html" %}
 
+
+
 {% block title %} 
 
-<a href="/"> Home</a> 
- / 
-<a href="/workorders"> Work Orders</a> 
- / 
-<a href="/workorder/{{ idnumber }}"> {{ idnumber }} </a>
- / 
-<a href="/workorder/{{ idnumber }}/edit"> Edit </a>
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/">Home</a></li>
+    <li class="breadcrumb-item"><a href="/workorders">Work Orders</a></li>
+    <li class="breadcrumb-item"><a href="/workorder/{{ idnumber }}">#{{ idnumber }}</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Edit</li>
+  </ol>
+</nav>
 
 {% endblock %}
-{% block tabletitle %} {{ idnumber }} {% endblock %}
+
+{% block tabtitle %} Edit WO#{{ idnumber }} {% endblock %}
 
 {% block main %}
 

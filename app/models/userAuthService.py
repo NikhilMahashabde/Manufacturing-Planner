@@ -66,10 +66,13 @@ class UserAuthService(UserAuthInterface):
             isAdmin:bool = request.form['input.user.isAdmin']
         else:
             isAdmin:bool = False
+        print(request.form)
+        newUser:UserAuthDataStructure = UserAuthDataStructure(name = request.form['name'], 
+                                                              email = request.form['email'], 
+                                                              uuid='test', 
+                                                              isAdmin=isAdmin, 
+                                                            password_hash=bcrypt.hashpw(request.form.get('password').encode(), bcrypt.gensalt()).decode())
 
-        newUser:UserAuthDataStructure = UserAuthDataStructure(request.form['name'], request.form['email'], 'test', isAdmin, 
-            bcrypt.hashpw(request.form.get('password').encode(), bcrypt.gensalt()).decode())
-        newUser.printUserAuthDataStructure()
         return self.userDBLinkService.addUserAuth(newUser)
 
     def getAllUserAuthData(self):

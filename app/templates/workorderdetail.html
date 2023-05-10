@@ -1,25 +1,36 @@
 {% extends "index.html" %}
 
+
+
 {% block title %} 
-<a href="/"> Home</a> 
- / 
-<a href="/workorders"> Work Orders</a> 
- / 
-<a href="/workorder/{{ idnumber }}"> {{ idnumber }} </a>
+
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/">Home</a></li>
+    <li class="breadcrumb-item"><a href="/workorders">Work Orders</a></li>
+    <li class="breadcrumb-item active" aria-current="page">#{{ idnumber }}</li>
+  </ol>
+</nav>
 
 {% endblock %}
-{% block tabletitle %} {{ idnumber }} {% endblock %}
+
+{% block tabtitle %} {{ idnumber }} {% endblock %}
 
 {% block main %}
 
 <!-- <button onclick="window.location.href='/forms/workorder/add'">Create New Order</button> -->
+
 <form method="POST" action="/workorder/{{ idnumber }}/edit">
 
-    <div style="margin: 10px; background-color: white;">
-      <button type="submit" name="{{ idnumber }}" value="delete">Delete Work Order {{ idnumber }} </button>
+    <div style="padding: 10px; background-color: white;">
+      <button type="submit" name="{{ idnumber }}" value="delete">Delete Work Order #{{ idnumber }} </button>
       <button type="submit" name="{{ idnumber }}" value="update">Edit Work order</button>
     </div>
     
+    <div style="margin: 0px; padding: 5px; background-color: lightgrey;" >
+      
+    </div>
+
     <div style="margin: 10px; background-color: white;">
 
       <table class="table" id = "workorder.{{ idnumber }}.table" style="margin: 10px; background-color: white;">
@@ -47,7 +58,7 @@
   </div>
 
 
-
+  <div style="margin: 0px; padding: 5px; background-color: lightgrey;" ></div>
   <h2> Work Order status</h2>
 
   <div id = "woStatusSwitches">
@@ -85,6 +96,32 @@
    
     </div>
 
+    <div style="margin: 0px; padding: 5px; background-color: lightgrey;" ></div>
+
+    
+    <div id="files">
+      <h2>Related Files</h2>
+
+      <div>
+        Work order:
+        <div id="woPickslipContainer">
+
+        </div>
+      </div>
+      <div>
+        Traveller:
+        <div id="woTravellerContainer">
+          
+        </div>
+      </div>
+  
+      </p>
+
+    </div>
+
+    
+    <div style="margin: 0px; padding: 5px; background-color: lightgrey;" ></div>
+
     <div>
       <h2>History</h2>
 
@@ -109,26 +146,8 @@
       </div>
 
     </div>
-
-    <div id="files">
-      <h2>Related Files</h2>
-
-      <div>
-        Work order:
-        <div id="woPickslipContainer">
-
-        </div>
-      </div>
-      <div>
-        Traveller:
-        <div id="woTravellerContainer">
-          
-        </div>
-      </div>
-  
-      </p>
-
-    </div>
+    
+    <div style="margin: 0px; padding: 5px; background-color: lightgrey;" ></div>
     
 
 

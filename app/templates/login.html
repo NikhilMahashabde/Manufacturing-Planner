@@ -1,10 +1,21 @@
 {% extends "index.html" %}
 
 {% block tabtitle %} Log in {% endblock %}
-{% block title %} Log in {% endblock %}
+
+{% block title %} 
+
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/">Home</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Log In</li>
+  </ol>
+</nav>
+
+{% endblock %}
 
 
 {% block main %}
+LOG IN 
 
 <form method="POST">
     <label for="email">Email</label>
@@ -15,5 +26,10 @@
 
     <input type="submit">
   </form>
+
+  Register
+
+  <a href="/"
+
 
 {% endblock %}

@@ -1,25 +1,62 @@
 {% extends "index.html" %}
 
 
-{% block title %} Register {% endblock %}
+{% block tabtitle %} Register {% endblock %}
+
+{% block title %} 
+
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/">Home</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Register</li>
+  </ol> 
+</nav>
+
+{% endblock %}
 
 {% block main %}
 
-<form method="POST" action="/api/user/add">
-    <label for="name">Name: </label>
-    <input type="text" id="input.user.name" name="name" required>
+<h5> New user Registration</h5>
 
-    <label for="email">Email: </label>
-    <input type="text" id="input.user.email" name="email" required>
 
-    <label for="password">Password: </label>
-    <input type="text" id="input.user.password" name="password" required>
+<form method="POST" action="/api/user/add" onsubmit="return checkPassword()">
 
-    <label for="password">Verify Password: </label>
-    <input type="text" id="input.user.password-verify" name="password-verify" required>
+    <div class="col-md-6">
+      <label for="input.user.name" class="form-label">Full Name </label>
+      <input type="text" id="input.user.name" class="form-control" name="name" required>
+    </div>
 
-    <button type="submit">Submit</button>
+    <div class="col-md-6">
+        <label for="input.user.email" class="form-label">Email </label>
+        <input type="email" id="input.user.email" class="form-control" name="email" required>
+    </div>
+    
+    <div class="col-md-6">
+      <label for="input.user.password" class="form-label">Password</label>
+      <input type="password" class="form-control" id="input.user.password" name="password" required>
+    </div>
+
+    <div class="col-md-6">
+      <label for="input.user.password-verify" class="form-label">Verify Password</label>
+      <input type="password" class="form-control" id="input.user.password-verify" name="password-verify" required>
+    </div>
+   
+    <div class="col-12">
+      <button type="submit" class="btn btn-primary">Register</button>
+    </div>
 
 </form>
+
+<script>
+  function checkPassword() {
+    let password = document.getElementById("input.user.password").value;
+    let passwordVerify = document.getElementById("input.user.password-verify").value;
+    if (password != passwordVerify) {
+      alert("Passwords do not match, try again");
+      return false;
+    }
+    return true;
+  }
+</script>
 
 {% endblock %}

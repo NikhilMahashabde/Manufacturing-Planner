@@ -2,12 +2,16 @@
 
 {% block title %} 
 
-<a href="/"> Home</a> 
- / 
-<a href="/workorders"> Work Orders</a> 
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/">Home</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Work Orders</li>
+  </ol>
+</nav>
 
 {% endblock %}
-{% block tabletitle %} Work Orders {% endblock %}
+
+{% block tabtitle %} Work Orders {% endblock %}
 
 {% block main %}
 
