@@ -110,6 +110,27 @@
 
     </div>
 
+    <div id="files">
+      <h2>Related Files</h2>
+
+      <div>
+        Work order:
+        <div id="woPickslipContainer">
+
+        </div>
+      </div>
+      <div>
+        Traveller:
+        <div id="woTravellerContainer">
+          
+        </div>
+      </div>
+  
+      </p>
+
+    </div>
+    
+
 
 
 
@@ -129,6 +150,21 @@
 
 {% block jsscripts %}
 <script>
+
+function createDownloadLink(fileData, filename) {
+  const bytes = atob(fileData);
+  const arr = new Uint8Array(bytes.length);
+  for (let i = 0; i < bytes.length; i++) {
+    arr[i] = bytes.charCodeAt(i);
+  }
+  const blob = new Blob([arr], {type: 'application/pdf'});
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = filename;
+  return link;
+}
+
 
   fetch('/api/workorder/{{ idnumber }}')
     .then(response => response.json())
@@ -205,7 +241,7 @@
           
 
           for (item in data.history){
-            console.log(item)
+  
             let row1 = historyContainer.insertRow();
 
             let cellTime = row1.insertCell();
@@ -222,8 +258,36 @@
             let cellMsgText = document.createElement("p")
             cellMsgText.textContent = data.history[item].message
             cellMsg.appendChild(cellMsgText)
+            
+            
+            // File data
 
           }
+          let travellerContainer = document.getElementById('woTravellerContainer')
+          if (!data.files[0].wotraveller){
+            travellerContainer.textContent = "No traveller attached"
+          } else  {
+            let traveller = createDownloadLink(data.files[0].traveller.data,data.files[0].traveller.filename )
+            travellerContainer.appendChild(traveller)
+            traveller.textContent = data.files[0].wopickslip.traveller
+          }
+
+          let pickslipContainer = document.getElementById('woPickslipContainer')
+          if (!data.files[0].wopickslip){
+            pickslipContainer.textContent = "No Pick slip attached"
+          } else {
+            let pickslip = createDownloadLink(data.files[0].wopickslip.data,data.files[0].wopickslip.filename )
+            pickslipContainer.appendChild(pickslip)
+            pickslip.textContent = data.files[0].wopickslip.filename
+          }
+
+
+
+          
+
+
+        
+            
           
 
 
@@ -271,6 +335,11 @@
       }
     )
     .catch(error => console.error(error));
+
+
+//  get link to file objects
+
+
 </script>
 
 {% endblock %}
