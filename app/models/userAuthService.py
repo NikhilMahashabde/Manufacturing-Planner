@@ -33,6 +33,7 @@ class UserAuthInterface(ABC):
     def deleteUserAuthData(request):
         pass
 
+
 class UserAuthService(UserAuthInterface):
 
     def __init__(self) -> None:

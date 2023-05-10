@@ -142,6 +142,16 @@ def apiRouteWorkOrderEditById(woid:int):
 
     return redirect(f"/workorder/{woid}")
 
+@app.route("/api/workorder/<int:woid>/process/file", methods=['POST'])
+def apiRouteWorkOrderEditFileById(woid:int):
+
+    message = g.workOrders.updateWorkOrderFiles(request, woid)
+   
+   # g.workOrders.updateWorkOrder(request, woid)
+    return message
+
+
+
 ######################################### admin routes #########################################################################
 
 ######## admin panel #####################

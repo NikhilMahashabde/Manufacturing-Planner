@@ -353,6 +353,33 @@ class WorkOrderFilesDBLinkService():
         args = (woid,)
         return (command, args)
     
+    def updateWorkOrderFilesByWONum(self, data: WorkOrderFilesDBStructure):
+        woid = data.wonumber
+
+        query = f"UPDATE {self.tableName} SET "
+        update_pairs = []
+
+        if data.wotraveller is not None:
+            update_pairs.append("wotraveller = %s")
+        if data.wopickslip is not None:
+            update_pairs.append("wopickslip = %s")
+
+        query += ", ".join(update_pairs)
+
+        # add the WHERE clause to the query
+        query += f" WHERE {data.wonumber} = %s;"
+
+        # create a tuple of parameter values for the query
+        param_values = []
+        if data.wotraveller is not None:
+            param_values.append(data.wotraveller)
+        if data.wopickslip is not None:
+            param_values.append(data.wopickslip)
+        param_values.append(data.wonumber)
+
+        return query, tuple(param_values)
+
+    
 
 
 

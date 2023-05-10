@@ -4,6 +4,8 @@ from abc import ABC, abstractmethod
 import json
 from flask import session
 import datetime
+import psycopg2
+import base64
 
 ########################## Work order master interface -> two services ########################
 class WorkOrderServiceInterface(ABC):
@@ -26,7 +28,11 @@ class WorkOrderServiceInterface(ABC):
 
         @abstractmethod
         def workOrderDelete(self, session):
-             pass
+            pass
+        
+        @abstractmethod
+        def updateWorkOrderFiles(self, request,woid):
+            pass
         
 class WorkOrderService(WorkOrderServiceInterface):
     
@@ -84,7 +90,7 @@ class WorkOrderService(WorkOrderServiceInterface):
 
         woFiles = WorkOrderFilesDBStructure(wonumber=woid)
         woDataStack.append(woFiles)
-     
+             
         data = self.dbConsolidator.readDB(self.WorkOrderDBInstance.getWorkOrderHeaderByIdTest(woHeader),
                                   self.WorkOrderDetailDBInstance.getWorkOrderDetailById(woDetail),
                                   self.WorkOrderHistoryDBInstance.getWorkOrderHistoryById(woHistory),
@@ -95,7 +101,18 @@ class WorkOrderService(WorkOrderServiceInterface):
         woDetailDict = self.WorkOrderDBInstance.convertToDict(data[1], woDetail)
         woHistoryDict = self.WorkOrderDBInstance.convertToDict(data[2], woHistory)
         woFilesDict = self.WorkOrderDBInstance.convertToDict(data[3], woFiles)
-
+   
+        print(woFilesDict)
+        if woFilesDict[0]['wopickslip'] != None: 
+           woFilesDict[0]['wopickslip'] = {
+            'data' : base64.b64encode(woFilesDict[0]['wopickslip']).decode('utf-8'),
+            'filename' : f'{woid}p'
+            }
+        if woFilesDict[0]['wotraveller'] != None: 
+            woFilesDict[0]['wotraveller'] = {
+                'data': base64.b64encode(woFilesDict[0]['wotraveller']).decode('utf-8'),
+                'filename': f'{woid}t'
+            }
 
         workOrderData = {'header':woHeaderDict, 'detail':woDetailDict, 'history': woHistoryDict, 'files': woFilesDict}
         
@@ -182,6 +199,41 @@ class WorkOrderService(WorkOrderServiceInterface):
 
 
         return True
+    
+    def updateWorkOrderFiles(self, request,woid):
+        print(request.files)
+        message = ""
+        WOFileObj = WorkOrderFilesDBStructure(wonumber=woid)
+        
+        if 'uploadWoPickSlip' in request.files:
+            pickslip = request.files['uploadWoPickSlip']
+            if pickslip.filename != "":
+                message = f"{pickslip.filename} Uploaded Sucessfully"
+                WOFileObj.wopickslip = psycopg2.Binary(pickslip.read())
+
+
+        if 'uploadWoTraveler' in request.files:
+            traveler = request.files['uploadWoTraveler']
+            if traveler.filename != "":
+                if message == "":
+                    message = f"{pickslip.filename} Uploaded Sucessfully"
+                else:
+                    message = message + f" and {pickslip.filename} Uploaded Sucessfully"
+                WOFileObj.wotraveller = psycopg2.Binary(traveler.read())
+
+        commandList = []
+        if message == "":
+            message = "No files uploaded, try again"
+        else:
+            commandList.append(self.WorkOrderFilesDBInstance.updateWorkOrderFilesByWONum(WOFileObj))
+
+        try:
+            self.dbConsolidator.writeDB(*commandList)
+        except Exception as e:
+            message = str(e)
+        
+        return message
+
 
 def json_serial(obj):
     """JSON serializer for objects not serializable by default json code"""
