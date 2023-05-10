@@ -267,9 +267,9 @@ function createDownloadLink(fileData, filename) {
           if (!data.files[0].wotraveller){
             travellerContainer.textContent = "No traveller attached"
           } else  {
-            let traveller = createDownloadLink(data.files[0].traveller.data,data.files[0].traveller.filename )
+            let traveller = createDownloadLink(data.files[0].wotraveller.data, data.files[0].wotraveller.filename )
             travellerContainer.appendChild(traveller)
-            traveller.textContent = data.files[0].wopickslip.traveller
+            traveller.textContent = data.files[0].wotraveller.filename
           }
 
           let pickslipContainer = document.getElementById('woPickslipContainer')

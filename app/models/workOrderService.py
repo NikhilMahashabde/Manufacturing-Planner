@@ -106,12 +106,12 @@ class WorkOrderService(WorkOrderServiceInterface):
         if woFilesDict[0]['wopickslip'] != None: 
            woFilesDict[0]['wopickslip'] = {
             'data' : base64.b64encode(woFilesDict[0]['wopickslip']).decode('utf-8'),
-            'filename' : f'{woid}p'
+            'filename' : f'Work order {woid} Pick slip'
             }
         if woFilesDict[0]['wotraveller'] != None: 
             woFilesDict[0]['wotraveller'] = {
                 'data': base64.b64encode(woFilesDict[0]['wotraveller']).decode('utf-8'),
-                'filename': f'{woid}t'
+                'filename': f'Work order {woid} Traveller'
             }
 
         workOrderData = {'header':woHeaderDict, 'detail':woDetailDict, 'history': woHistoryDict, 'files': woFilesDict}
