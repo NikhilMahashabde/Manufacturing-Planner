@@ -15,10 +15,16 @@
 
 {% block main %}
 
+<div style="margin:10px; border-radius:10px; padding: 10px; background-color: white; ">
+
+
 <button onclick="window.location.href='/forms/workorder/add'">Create New Order</button>
-<form method="POST" action="/api/workorders/process">
-  
-  <button type="submit" name="wo" value="delete">Delete Selected</button>
+
+<button onclick="">Ignore closed orders(broken)</button>
+<button onclick="">Arrange by due date (still broken)</button>
+  <form method="POST" action="/api/workorders/process">
+
+</div>
   <!-- <table class="table">
     <thead>
       <tr>
@@ -75,34 +81,33 @@
     </tbody>
   </table> -->
 
-  <table class="table" >
-    
-    <thead>
-      <tr>
-        <th scope="select">Select</th>
-        <th scope="workOrderNumber">Name</th>
-        <th scope="itemNumber">Item Number</th>
-        <th scope="Itemdescription">Item Description</th>
-        <th scope="quantity">Quantity</th>
-        <th scope="project">Project</th>
-        <th scope="duedate">Due Date</th>
-        <th scope="closed">WO closed</th>
-      </tr>
-    </thead>
-
-    <tbody id="tableWorkOrdersBody">
-
-
-
+  <div style="margin:10px; border-radius:10px; padding: 10px; background-color: white; ">
+    <table class="table" >
       
+      <thead style="margin:10px; border-radius:10px; padding: 10px; background-color: rgb(235, 233, 233); " >
+        <tr>
+          <th scope="select">Select</th>
+          <th scope="workOrderNumber">Name</th>
+          <th scope="itemNumber">Item Number</th>
+          <th scope="Itemdescription">Item Description</th>
+          <th scope="quantity">Quantity</th>
+          <th scope="project">Project</th>
+          <th scope="duedate">Due Date</th>
+          <th scope="closed">WO closed</th>
+        </tr>
+      </thead>
 
-    </tbody>
-  </table>
+      <tbody id="tableWorkOrdersBody"></tbody>
+    </table>
 
-  <div class="d-flex justify-content-center" id="loadingSpinner">
-    <div class="spinner-border" role="status">
-      <span class="visually-hidden">Loading...</span>
+    <button type="submit" name="wo" value="delete">Delete Selected</button>
+
+    <div class="d-flex justify-content-center" id="loadingSpinner">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
     </div>
+
   </div>
 
 </form>

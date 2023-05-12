@@ -22,19 +22,23 @@
 
 <form method="POST" action="/workorder/{{ idnumber }}/edit">
 
-    <div style="padding: 10px; background-color: white;">
+  <div style="margin: 10px ; border-radius:10px; padding: 10px; background-color: white;">
+    <h2>View - Work order {{ idnumber }}</h2>
+    
+  </div>
+  
+
+    <div style="margin: 10px ; border-radius:10px; padding: 10px; background-color: white;">
+
       <button type="submit" name="{{ idnumber }}" value="delete">Delete Work Order #{{ idnumber }} </button>
       <button type="submit" name="{{ idnumber }}" value="update">Edit Work order</button>
+
     </div>
     
-    <div style="margin: 0px; padding: 5px; background-color: lightgrey;" >
-      
-    </div>
+    <div style="margin: 10px; border-radius:10px; padding: 10px; background-color: white;">
 
-    <div style="margin: 10px; background-color: white;">
-
-      <table class="table" id = "workorder.{{ idnumber }}.table" style="margin: 10px; background-color: white;">
-        <thead>
+      <table class="table" id = "workorder.{{ idnumber }}.table">
+        <thead style="margin:10px; border-radius:10px; padding: 10px; background-color: rgb(235, 233, 233); " >
           <tr>
             <th scope="workOrderNumber">Name</th>
             <th scope="itemNumber">Item Number</th>
@@ -50,54 +54,57 @@
       </table>
 
     </div>
-   
-  <div class="d-flex justify-content-center" id="loadingSpinner">
-    <div class="spinner-border" role="status">
-      <span class="visually-hidden">Loading...</span>
-    </div>
-  </div>
-
-
-  <div style="margin: 0px; padding: 5px; background-color: lightgrey;" ></div>
-  <h2> Work Order status</h2>
-
-  <div id = "woStatusSwitches">
-
-
-    <div class="form-check form-check-inline" disabled>
-      <input class="form-check-input" type="checkbox" id="inlineCheckboxFirmed" value="option1" disabled>
-      <label class="form-check-label" for="inlineCheckbox1">Order Firmed</label>
+      
+    <div class="d-flex justify-content-center" id="loadingSpinner">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
     </div>
 
-    <div class="form-check form-check-inline" readonly>
-      <input class="form-check-input" type="checkbox" id="inlineCheckboxDisassembled" value="option2" disabled>
-      <label class="form-check-label" for="inlineCheckbox2">Disassembled</label>
-    </div>
 
-    <div class="form-check form-check-inline" readonly>
-      <input class="form-check-input" type="checkbox" id="inlineCheckboxReceived" value="option1" disabled>
-      <label class="form-check-label" for="inlineCheckbox1">Order Received</label>
-    </div>
 
-    <div class="form-check form-check-inline" readonly>
-      <input class="form-check-input" type="checkbox" id="inlineCheckboxReassembled" value="option1" disabled>
-      <label class="form-check-label" for="inlineCheckbox1">Order Reassembled</label>
-    </div>
+    <div style="margin:10px; border-radius:10px; padding: 10px; background-color: white;" >
+      <h5> Work Order status</h5>
+      <div class="progress">
+        <div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
+      </div>
+      <div id = "woStatusSwitches">
 
-    <div class="form-check form-check-inline" readonly>
-      <input class="form-check-input" type="checkbox" id="inlineCheckboxRework" value="option1" disabled>
-      <label class="form-check-label" for="inlineCheckbox1">Order Rework</label>
-    </div>
 
-    <div class="form-check form-check-inline" readonly>
-      <input class="form-check-input" type="checkbox" id="inlineCheckboxClosed" value="option1" disabled>
-      <label class="form-check-label" for="inlineCheckbox1">Order Closed</label>
-    </div>
-   
-    </div>
+        <div class="form-check form-check-inline" disabled>
+          <input class="form-check-input" type="checkbox" id="inlineCheckboxFirmed" value="option1" disabled>
+          <label class="form-check-label" for="inlineCheckbox1">Order Firmed</label>
+        </div>
+    
+        <div class="form-check form-check-inline" readonly>
+          <input class="form-check-input" type="checkbox" id="inlineCheckboxDisassembled" value="option2" disabled>
+          <label class="form-check-label" for="inlineCheckbox2">Disassembled</label>
+        </div>
+    
+        <div class="form-check form-check-inline" readonly>
+          <input class="form-check-input" type="checkbox" id="inlineCheckboxReceived" value="option1" disabled>
+          <label class="form-check-label" for="inlineCheckbox1">Order Received</label>
+        </div>
+    
+        <div class="form-check form-check-inline" readonly>
+          <input class="form-check-input" type="checkbox" id="inlineCheckboxReassembled" value="option1" disabled>
+          <label class="form-check-label" for="inlineCheckbox1">Order Reassembled</label>
+        </div>
+    
+        <div class="form-check form-check-inline" readonly>
+          <input class="form-check-input" type="checkbox" id="inlineCheckboxRework" value="option1" disabled>
+          <label class="form-check-label" for="inlineCheckbox1">Order Rework</label>
+        </div>
+    
+        <div class="form-check form-check-inline" readonly>
+          <input class="form-check-input" type="checkbox" id="inlineCheckboxClosed" value="option1" disabled>
+          <label class="form-check-label" for="inlineCheckbox1">Order Closed</label>
+        </div>
+       
+        </div>
 
-    <div style="margin: 0px; padding: 5px; background-color: lightgrey;" ></div>
-
+    </div>  
+  
     
     <div id="files">
       <h2>Related Files</h2>
