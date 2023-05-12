@@ -86,6 +86,7 @@
         <th scope="quantity">Quantity</th>
         <th scope="project">Project</th>
         <th scope="duedate">Due Date</th>
+        <th scope="closed">WO closed</th>
       </tr>
     </thead>
 
@@ -113,44 +114,47 @@
     .then(response => response.json())
     .then(data => {
       console.log(data)
-      console.log(data.length)
-      const workorders = data.map(data => JSON.parse(data))
 
       let woTable = document.getElementById("tableWorkOrdersBody");
       document.getElementById("loadingSpinner").remove()
-      for (let i = 0; i < data.length; i++) {
-          let row = woTable.insertRow();
-          console.log(data[i])
 
-          let cell0 = row.insertCell();
-          let tickbox = document.createElement("input")
-          tickbox.type = "checkbox" 
-          tickbox.name = workorders[i].wonumber + ".selected";
-          cell0.appendChild(tickbox)
+      data.workorders.forEach( order => {
 
-          let cell1 = row.insertCell();
-          let woLink = document.createElement("a")
-          woLink.href = `/workorder/${workorders[i].wonumber}`
-          woLink.textContent = workorders[i].wonumber
-          cell1.appendChild(woLink)
+        let row = woTable.insertRow();
+        console.log(order)
 
-          let cell2 = row.insertCell();
-          cell2.textContent = workorders[i].itemnumber;
+        let cell0 = row.insertCell();
+        let tickbox = document.createElement("input")
+        tickbox.type = "checkbox" 
+        tickbox.name = order.wonumber + ".selected";
+        cell0.appendChild(tickbox)
 
-          let cell3 = row.insertCell();
-          cell3.textContent = workorders[i].itemdescription;
+        let cell1 = row.insertCell();
+        let woLink = document.createElement("a")
+        woLink.href = `/workorder/${order.wonumber}`
+        woLink.textContent = order.wonumber
+        cell1.appendChild(woLink)
 
-          let cell4 = row.insertCell();
-          cell4.textContent = workorders[i].quantity;
+        let cell2 = row.insertCell();
+        cell2.textContent = order.itemnumber;
 
-          let cell5 = row.insertCell();
-          cell5.textContent = workorders[i].project;
-          
-          let cell6 = row.insertCell();
-          cell6.textContent = workorders[i].duedate;
-        }
-      }
-    )
+        let cell3 = row.insertCell();
+        cell3.textContent = order.itemdescription;
+
+        let cell4 = row.insertCell();
+        cell4.textContent = order.quantity;
+
+        let cell5 = row.insertCell();
+        cell5.textContent = order.project;
+        
+        let cell6 = row.insertCell();
+        cell6.textContent = order.duedate;
+
+        let cell7 = row.insertCell();
+        cell7.textContent = order.closed;
+
+      })
+    })
     .catch(error => console.error(error));
 </script>
 

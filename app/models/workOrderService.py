@@ -116,9 +116,9 @@ class WorkOrderService(WorkOrderServiceInterface):
 
         workOrderData = {'header':woHeaderDict, 'detail':woDetailDict, 'history': woHistoryDict, 'files': woFilesDict}
         
-        workOrderJson = json.dumps(workOrderData, default=json_serial)
-      
-        return workOrderJson
+       # workOrderJson = json.dumps(workOrderData, default=json_serial)
+
+        return workOrderData
 
     def workOrderDelete(self, request, wonumber:int = ""):
         

@@ -127,13 +127,18 @@ class WorkOrdersDbLink(WorkOrdersDbLinkInterface):
 
     
     def getAllWorkOrders(self):
-        command = f"""SELECT * FROM {self.tableName}"""
+        command = f"""SELECT wo.*, wod.*
+                    FROM workorders wo
+                    JOIN workorderdetail wod
+                    ON wo.wonumber = wod.wonumber;
+                    """
         workorderData = self.dbAccessServiceInstance.dbReadRecord(command)
 
+        print(workorderData)
         wolist = []
         for item in workorderData:
-            woDict = dict(zip(WorkOrderListDataDBStructure().__dict__.keys(), item))
-            wolist.append(json.dumps(woDict))
+            woDict = dict(zip(list(WorkOrderListDataDBStructure().__dict__.keys())+list(WorkOrderDetailDBStructure().__dict__.keys()), item))
+            wolist.append(woDict)
        
         return wolist
     

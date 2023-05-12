@@ -1,7 +1,7 @@
 # file: app.py
 import sys
 sys.path.insert(0, '..')
-from flask import Flask, render_template, session, redirect, url_for, request, g
+from flask import Flask, render_template, session, redirect, url_for, request, g, jsonify
 from datetime import timedelta
 import os
 from models.userAuthService import *
@@ -175,11 +175,16 @@ def routeDeleteUserAuthApi():
 
 @app.route("/api/workorders/all")
 def apiWorkOrdersAll():
-    return g.workOrders.getAllWorkOrders()
+    workorders = g.workOrders.getAllWorkOrders()
+    print(workorders)
+
+    return jsonify({'workorders':workorders}), 200, {"Content-Type": "application/json"}
 
 @app.route("/api/workorder/<int:woid>")
 def apiGetWorkOrderDetailById(woid:int):
-    return g.workOrders.getWorkOrderDetailById(woid)
+
+    data = g.workOrders.getWorkOrderDetailById(woid)
+    return jsonify(data), 200, {"Content-Type": "application/json"}
 
 @app.route("/api/userAuth/allusers")
 def routeApiUserAuthAllUsers():
