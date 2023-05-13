@@ -135,29 +135,6 @@ Dash board entry site
 work order notes
 work orders statues
 
-# Project 2 manufac alpha static site
-
-Purpose - just build a really solid app that does everything, is
-secure, 
-fast,
-efficient 
-
-and allows me to learn things
-JWT
-Bootstrap extended. 
-OOP - class and service setup
-
-**routes**
-
-
-/workorders/api
-/workorders/api/<id>
-
-[ work order update -> ]
-
-/forms/users/update
-- update all user data and passwords - admin only. 04/05
-
 **features**
 ** work order page **
 
@@ -169,7 +146,6 @@ OOP - class and service setup
 - api for datacalls on front end. 
 - working check boxes. 
 - 
-
 
 **LOGIN AND SECURITY **
 - login with session token
@@ -206,8 +182,6 @@ pull in work order data from external APi
     - site will check jwt token against main site to authenticate token 
 
 pull in requsitions from external API
-
-
 
 
 # README
