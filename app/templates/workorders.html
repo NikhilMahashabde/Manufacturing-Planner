@@ -18,10 +18,10 @@
 <div style="margin:10px; border-radius:10px; padding: 10px; background-color: white; ">
 
 
-<button onclick="window.location.href='/forms/workorder/add'">Create New Order</button>
+<button class="btn btn-primary" onclick="window.location.href='/forms/workorder/add'">Create New Order</button>
 
-<button onclick="">Ignore closed orders(broken)</button>
-<button onclick="">Arrange by due date (still broken)</button>
+<button class="btn btn-secondary" onclick="">Ignore closed orders(broken)</button>
+<button class="btn btn-secondary" onclick="">Arrange by due date (still broken)</button>
   <form method="POST" action="/api/workorders/process">
 
 </div>
@@ -100,7 +100,7 @@
       <tbody id="tableWorkOrdersBody"></tbody>
     </table>
 
-    <button type="submit" name="wo" value="delete">Delete Selected</button>
+    <button class="btn btn-dark" type="submit" name="wo" value="delete">Delete Selected</button>
 
     <div class="d-flex justify-content-center" id="loadingSpinner">
       <div class="spinner-border" role="status">

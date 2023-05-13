@@ -15,21 +15,55 @@
 
 
 {% block main %}
-LOG IN 
 
-<form method="POST">
-    <label for="email">Email</label>
-    <input id="email" type="email" name="email">
 
-    <label for="password">Password</label>
-    <input id="password" type="password" name="password">
+<div style="margin:10px; border-radius:10px; padding: 10px; background-color: white;">
 
-    <input type="submit">
-  </form>
 
-  Register
 
-  <a href="/"
+  <div style="margin:auto;">
 
+  
+    <h2>LOG IN </h2>
+    <form method="POST">
+
+      <div class="mb-3">
+        <label for="exampleInputEmail1" class="form-label">Email address</label>
+        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="email">
+        <div id="emailHelp" class="form-text">We'll never share your email with anyone else. or try not to.</div>
+      </div>
+
+      <div class="mb-3">
+        <label for="exampleInputPassword1" class="form-label">Password</label>
+        <input type="password" class="form-control" id="exampleInputPassword1" name="password">
+      </div>
+
+      <button type="submit" class="btn btn-primary">Submit</button>
+
+      <h2> Register </h2>
+      <a href="/">Sign up Here</a>
+    </form>
+  </div>
+
+<!--   
+
+  <div style="margin: 0 auto;">
+    <h2>LOG IN </h2>
+
+    <form method="POST">
+      <label for="email">Email</label>
+      <input id="email" type="email" name="email">
+
+      <label for="password">Password</label>
+      <input id="password" type="password" name="password">
+
+      <input type="submit">
+    </form>
+
+    Register
+
+    <a href="/">
+  </div> -->
+</div>
 
 {% endblock %}

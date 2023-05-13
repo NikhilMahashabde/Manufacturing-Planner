@@ -19,19 +19,27 @@
 
 {% block main %}
 
+<div style="margin: 10px ; border-radius:10px; padding: 10px; background-color: white;">
+  <h2>Edit - Work order {{ idnumber }}</h2>
+  
+</div>
+
+
+
 <!-- <button onclick="window.location.href='/forms/workorder/add'">Create New Order</button> -->
 <form method="POST" action="/api/workorder/{{idnumber}}/process">
 
-  <div style="margin: 10px; background-color: white;">
-    <button type="submit" name="wo" value="delete">Delete Work Order {{ idnumber }} </button>
-    <button type="submit" name="wo" value="update">Submit Changes</button>
+  <div style="margin:10px; border-radius:10px; padding: 10px; background-color: white;" >
+    <button type="submit" class="btn btn-success" name="wo" value="update">Submit Changes</button>
+    <button type="submit" class="btn btn-dark" name="wo" value="delete">Delete Work Order {{ idnumber }} </button>
   </div>
     
 
-  <div style="margin: 10px; background-color: white;">
+  <div style="border-radius:10px; padding:10px; margin: 10px; background-color: white;">
 
+    
     <table class="table" id = "workorder.{{ idnumber }}.table" style="margin: 10px; background-color: white;">
-      <thead>
+      <thead style="margin:10px; border-radius:10px; padding: 10px; background-color: rgb(235, 233, 233); " >
         <tr>
           <th scope="workOrderNumber">Name</th>
           <th scope="itemNumber">Item Number</th>
@@ -54,58 +62,65 @@
     </div>
   </div>
 
+  <div style="border-radius:10px; padding:10px; margin: 10px; background-color: white;">
+    <h2> Work Order status</h2>
 
+    <div id = "woStatusSwitches">
+      <div class="form-check form-check-inline" >
+        <input class="form-check-input" type="checkbox" id="inlineCheckboxFirmed" value=True name="firmed">
+        <label class="form-check-label" for="inlineCheckboxFirmed">Order Firmed</label>
+      </div>
 
-  <h2> Work Order status</h2>
+      <div class="form-check form-check-inline" >
+        <input class="form-check-input" type="checkbox" id="inlineCheckboxDisassembled" value=True name="disassembled" >
+        <label class="form-check-label" for="inlineCheckboxDisassembled">Disassembled</label>
+      </div>
 
-  <div id = "woStatusSwitches">
-    <div class="form-check form-check-inline" >
-      <input class="form-check-input" type="checkbox" id="inlineCheckboxFirmed" value=True name="firmed">
-      <label class="form-check-label" for="inlineCheckboxFirmed">Order Firmed</label>
-    </div>
+      <div class="form-check form-check-inline" >
+        <input class="form-check-input" type="checkbox" id="inlineCheckboxReceived" value=True name="received">
+        <label class="form-check-label" for="inlineCheckboxReceived">Order Received</label>
+      </div>
 
-    <div class="form-check form-check-inline" >
-      <input class="form-check-input" type="checkbox" id="inlineCheckboxDisassembled" value=True name="disassembled" >
-      <label class="form-check-label" for="inlineCheckboxDisassembled">Disassembled</label>
-    </div>
+      <div class="form-check form-check-inline" >
+        <input class="form-check-input" type="checkbox" id="inlineCheckboxReassembled" value=True name="reassembled" >
+        <label class="form-check-label" for="inlineCheckboxReassembled">Order Reassembled</label>
+      </div>
 
-    <div class="form-check form-check-inline" >
-      <input class="form-check-input" type="checkbox" id="inlineCheckboxReceived" value=True name="received">
-      <label class="form-check-label" for="inlineCheckboxReceived">Order Received</label>
-    </div>
+      <div class="form-check form-check-inline" >
+        <input class="form-check-input" type="checkbox" id="inlineCheckboxRework" value=True name="rework">
+        <label class="form-check-label" for="inlineCheckboxRework">Order Rework</label>
+      </div>
 
-    <div class="form-check form-check-inline" >
-      <input class="form-check-input" type="checkbox" id="inlineCheckboxReassembled" value=True name="reassembled" >
-      <label class="form-check-label" for="inlineCheckboxReassembled">Order Reassembled</label>
-    </div>
-
-    <div class="form-check form-check-inline" >
-      <input class="form-check-input" type="checkbox" id="inlineCheckboxRework" value=True name="rework">
-      <label class="form-check-label" for="inlineCheckboxRework">Order Rework</label>
-    </div>
-
-    <div class="form-check form-check-inline" >
-      <input class="form-check-input" type="checkbox" id="inlineCheckboxClosed" value=True name="closed">
-      <label class="form-check-label" for="inlineCheckboxClosed">Order Closed</label>
+      <div class="form-check form-check-inline" >
+        <input class="form-check-input" type="checkbox" id="inlineCheckboxClosed" value=True name="closed">
+        <label class="form-check-label" for="inlineCheckboxClosed">Order Closed</label>
+      </div>
     </div>
   </div>
   
 </form>
 
-<div id="upload container">
-  <form id="uploadFileForm" action="/api/workorder/{{idnumber}}/process/file" method="POST" enctype="multipart/form-data">
-    <div class="mb-3" style="margin: 10px; background-color: white;">
-      <label for="uploadWoPickSlip" class="form-label">Upload Work Order Pick Slip</label>
-      <input class="form-control" type="file" id="uploadWoPickSlip" name="uploadWoPickSlip">
-    </div>
-    <div class="mb-3" style="margin: 10px; background-color: white";>
-      <label for="uploadWoTraveler" class="form-label">Upload Work Order Traveler</label>
-      <input class="form-control" type="file" id="uploadWoTraveler" name="uploadWoTraveler">
-    </div>
-    <input type="submit" value="Upload">
-  </form>
-  <div id="uploadStatus"></div>
+<div style="margin: 10px ; border-radius:10px; padding: 10px; background-color: white;">
+
+  <h2> Work Order Files </h2>
+  <div id="upload container">
+    <form id="uploadFileForm" action="/api/workorder/{{idnumber}}/process/file" method="POST" enctype="multipart/form-data">
+      <div class="mb-3" style="margin: 10px; background-color: white;">
+        <label for="uploadWoPickSlip" class="form-label">Upload Work Order Pick Slip</label>
+        <input class="form-control" type="file" id="uploadWoPickSlip" name="uploadWoPickSlip">
+      </div>
+      <div class="mb-3" style="margin: 10px; background-color: white";>
+        <label for="uploadWoTraveler" class="form-label">Upload Work Order Traveler</label>
+        <input class="form-control" type="file" id="uploadWoTraveler" name="uploadWoTraveler">
+      </div>
+      <input type="submit" class="btn btn-primary" value="Upload">
+    </form>
+    <div id="uploadStatus"></div>
+  </div>
+  
 </div>
+
+
 
 
 {% endblock %}
