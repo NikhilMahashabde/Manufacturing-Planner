@@ -27,12 +27,11 @@
     
   </div>
   
-
     <div style="margin: 10px ; border-radius:10px; padding: 10px; background-color: white;">
 
-      <button type="submit" name="{{ idnumber }}" value="delete">Delete Work Order #{{ idnumber }} </button>
-      <button type="submit" name="{{ idnumber }}" value="update">Edit Work order</button>
-
+      <button type="submit" class="btn btn-primary" name="{{ idnumber }}" value="update">Edit Work order</button>
+      <button type="submit" class="btn btn-dark" name="{{ idnumber }}" value="delete">Delete Work Order #{{ idnumber }} </button>
+      
     </div>
     
     <div style="margin: 10px; border-radius:10px; padding: 10px; background-color: white;">
@@ -105,53 +104,59 @@
 
     </div>  
   
-    
-    <div id="files">
-      <h2>Related Files</h2>
+    <div style="margin:10px; border-radius:10px; padding: 10px; background-color: white;" >
+      <div class="row">
+        <div class="col-sm-6">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Work Order Pick</h5>
+              <p class="card-text">List of work order components - requires attention of WH Team. </p>
+              <div id="woPickslipContainer">
 
-      <div>
-        Work order:
-        <div id="woPickslipContainer">
-
+              </div>
+             
+            </div>
+          </div>
         </div>
-      </div>
-      <div>
-        Traveller:
-        <div id="woTravellerContainer">
+        <div class="col-sm-6">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Work Order Traveller</h5>
+              <p class="card-text">Manufacturing Work Instructions - Print and initiate as per schedule</p>
+              
+              <div id="woTravellerContainer">
           
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-  
-      </p>
-
     </div>
 
+     
+    <div style="margin:10px; border-radius:10px; padding: 10px; background-color: white;" >
+        <h2>History</h2>
+        <div>
+          <div id="historyContainer">
     
-    <div style="margin: 0px; padding: 5px; background-color: lightgrey;" ></div>
+              <table class="table" id = "workorder.{{ idnumber }}.table.history" style="margin: 10px; background-color: white;">
+                <thead>
+                  <tr>
+                    <th scope="Time">Time</th>
+                    <th scope="signature">User</th>
+                    <th scope="Itemdescription">Message</th>
+                  </tr>
+                </thead>
+                <tbody id="tableHistory">
+          
+                </tbody>
+              </table>
+    
+            </div>
+    
+        </div>
 
-    <div>
-      <h2>History</h2>
-
-      <div>
-         <div id="historyContainer">
-  
-            <table class="table" id = "workorder.{{ idnumber }}.table.history" style="margin: 10px; background-color: white;">
-              <thead>
-                <tr>
-                  <th scope="Time">Time</th>
-                  <th scope="signature">User</th>
-                  <th scope="Itemdescription">Message</th>
-                </tr>
-              </thead>
-              <tbody id="tableHistory">
-        
-              </tbody>
-            </table>
-  
-          </div>
-  
       </div>
-
     </div>
     
     <div style="margin: 0px; padding: 5px; background-color: lightgrey;" ></div>
@@ -296,6 +301,7 @@ function createDownloadLink(fileData, filename) {
             let traveller = createDownloadLink(data.files[0].wotraveller.data, data.files[0].wotraveller.filename )
             travellerContainer.appendChild(traveller)
             traveller.textContent = data.files[0].wotraveller.filename
+            traveller.setAttribute("class", "btn btn-primary")
           }
 
           let pickslipContainer = document.getElementById('woPickslipContainer')
@@ -305,6 +311,7 @@ function createDownloadLink(fileData, filename) {
             let pickslip = createDownloadLink(data.files[0].wopickslip.data,data.files[0].wopickslip.filename )
             pickslipContainer.appendChild(pickslip)
             pickslip.textContent = data.files[0].wopickslip.filename
+            pickslip.setAttribute("class", "btn btn-primary")
           }
 
 
