@@ -120,10 +120,6 @@ class WorkOrdersDbLink(WorkOrdersDbLinkInterface):
         
         args = tuple(dataDict.values())
         return (command, args)
-    
-    
-    
-
 
     
     def getAllWorkOrders(self):
@@ -392,9 +388,6 @@ class WorkOrderFilesDBLinkService():
 
 
 ##############################################################################################################
-
-
-
 
 
 class WorkOrderDBConsolidator():
