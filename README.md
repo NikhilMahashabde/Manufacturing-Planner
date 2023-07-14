@@ -1,4 +1,4 @@
-Manufacturing Alpha 
+Manufacturing Planner - Alpha release v0.10 
 
 Manufacturing Alpha is designed to automate the day to day administrative operations of a typical custom manufacturing department. The application has been created using a Flask / Python back end, and HTML, CSS and Javascript front end, incorporating the bootstrap UI library for styling.
 Link to site - https://manufacturing-llmk.onrender.com/
